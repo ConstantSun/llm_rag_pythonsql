@@ -7,22 +7,15 @@ import env
 def strim_code(raw_answer: str):
     strim_ans = ""
     flag = False
-    print("----Strim code-----------------\n", )
     for line in raw_answer.splitlines():
-        print(line)
         if "```python" in line:
-            print("START___________")
             flag = True
             continue
-
         elif "```" in line:
-            print("END_______________")
             flag = False
         
         if flag:
             strim_ans += line + "\n"
-
-    print("----end-----------------\n", )
     return strim_ans
 
 
@@ -61,7 +54,7 @@ Question: "{question}", you only answer the python code
     
     
     ################################
-    prompt_template_for_python_athena = f"""Convert the following python code, so that it connects to Amazon Athena database instead of PostgreSQL, using PyAthena library, the database name and table names are all the same in PostgreSQL, aws_access_key_id is {env.aws_access_key_id}, aws_secret_access_key is {env.aws_secret_access_key}, s3 bucket is {env.athena_s3_bucket}, region_name is {env.region_name} :
+    prompt_template_for_python_athena = f"""Convert the following python code, so that it connects to Amazon Athena database instead of PostgreSQL, using PyAthena library, Amazon Athena table name is the same as table's name in PostgreSQL, the Amazon Athena table has a prefix: "{dbtable_info.dataupcom_db_name}", aws_access_key_id is {env.aws_access_key_id}, aws_secret_access_key is {env.aws_secret_access_key}, s3 bucket is {env.athena_s3_bucket}, region_name is {env.region_name}, return program's result in a function named get_result, the get_result function will return an array of target value(s):
     {genereted_python_code_postgresql}
     """
     def get_generated_python_athena_code():
@@ -74,16 +67,16 @@ Question: "{question}", you only answer the python code
     
     generated_python_athena_code = strim_code(generated_python_athena_code)
 
-    
+
     print("----Strim Athena SQL-----------------\n", generated_python_athena_code)
     print("----end-----------------\n", )
     ################################
     # write that code above to a .py file
-    text_file = open("single_task/generated_python_athena_code.py", "w")
+    text_file = open("single_task/auto_generated_python_athena_code.py", "w")
     text_file.write(generated_python_athena_code)
 
-    # # import that file and get the result
-    # import generated_python_athena_code
-    # final_code_result = get_generated_python_athena_code.get_result()
+    # import that file and get the result
+    import single_task.auto_generated_python_athena_code as auto_generated_python_athena_code
+    final_code_result = auto_generated_python_athena_code.get_result()
 
-    return 
+    return final_code_result

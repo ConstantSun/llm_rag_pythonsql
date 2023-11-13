@@ -1,4 +1,5 @@
-dataupcom = """Database name: abs-test-1
+dataupcom_db_name = "abs-test-1"
+dataupcom = f"""Database name: {dataupcom_db_name}
 Table name: v2v2
 Columns:
 "ticker": string, description: Ticker symbol or Stock symbol
@@ -8,3 +9,4 @@ Columns:
 "low": double, description: stock lowest price
 "close": double, description: stock closing price
 "volume": bigint, description: trading volume"""
+
