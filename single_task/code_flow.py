@@ -33,7 +33,7 @@ def ask_python_code(question: str):
     db_info = dbtable_info.dataupcom
 
     prompt_template_for_python_postgre = f"""You are an expert in Stock Market and you are also a SQL expert and Python expert, and you work as both a Data Analysis and a Developer for a Securities Company.
-Given an input question, create a syntactically correct python program, this program might use PostgreSQL's query to run:
+Given an input question, create a syntactically correct python program, this program might use SQL query to run in Postgresql database:
 
 {formula_note}
 
@@ -74,6 +74,16 @@ Question: "{question}", you only answer the python code
     # write that code above to a .py file
     text_file = open("single_task/auto_generated_python_athena_code.py", "w")
     text_file.write(generated_python_athena_code)
+
+    # import that file and get the result
+    import time
+    time.sleep(1)
+    import single_task.auto_generated_python_athena_code as auto_generated_python_athena_code
+    final_code_result = auto_generated_python_athena_code.get_result()
+
+    return final_code_result
+
+def test_ask_python_code(question: str):
 
     # import that file and get the result
     import single_task.auto_generated_python_athena_code as auto_generated_python_athena_code

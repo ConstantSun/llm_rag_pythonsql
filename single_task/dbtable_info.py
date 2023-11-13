@@ -1,6 +1,6 @@
-dataupcom_db_name = "abs-test-1"
+dataupcom_db_name = "absdb"
 dataupcom = f"""Database name: {dataupcom_db_name}
-Table name: v2v2
+Table name: v2
 Columns:
 "ticker": string, description: Ticker symbol or Stock symbol
 "dtyyyymmdd": bigint, description: date time, format : year-month-day
