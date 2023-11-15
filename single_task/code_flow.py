@@ -33,17 +33,22 @@ def ask_python_code(question: str, start_time):
     db_info = dbtable_info.dataupcom
 
     prompt_template_for_python_postgre = f"""You are an expert in Stock Market and you are also a SQL expert and Python expert, and you work as both a Data Analysis and a Developer for a Securities Company.
-Given an input question, create a syntactically correct python program, this program might use SQL query to run in Postgresql database. Unless the user specifies in the question a specific number of examples to obtain, query for at most {env.top_k} results using the LIMIT clause as per SQL. You can order the results to return the most informative data in the database.
-If the question ask for a keyword search, always use LIKE syntax, case-insensitive syntax (%), and LOWER() function. Never use equals sign for a keyword search.
+Given an input question, create a syntactically correct python program, this program might use SQL query to run in Postgresql database. Unless the user specifies in the question a specific number of examples to obtain, query for at most 10 results using the LIMIT clause as per SQL. You can order the results to return the most informative data in the database.
+If the question ask for a keyword search, always use LIKE syntax, case-insensitive syntax (%), and LOWER() function, e.g: To check if ticker equals to "Xyz", then use: LOWER(ticker) LIKE LOWER('%Xyz%'). Never use equals sign for a keyword search.
 
-Only use the following formulas if the question mentions any of them:
+Only use the following formulas if the question mentions any of them, do not use your knowledge to create any formula if it is not mentioned below:
 {formula_note}
 
 Only use the following database with tables:
 {db_info}
 
-Return program's result in a function named get_result, the get_result function will return an array of target value(s):
-Question: "{question}":"""
+Return program's result in a function named get_result, the get_result function will return an array of target value(s), do not use print() function, start the python code with the line: 
+```python
+and end the python code with the line:
+```
+
+If the Question wants to know any values, carefully check those formulas above, do not use your own formula to answer the Question and answer "404 not found" if you can not find the formula.
+Question: "{question}" """
     ################################
 
     print("prompt_template_for_python_postgre: \n", prompt_template_for_python_postgre)
