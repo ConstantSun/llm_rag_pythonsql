@@ -94,7 +94,6 @@ boto3_bedrock = get_bedrock_client(
 
 # - create the Anthropic Model
 llm = Bedrock(
-    model_id="anthropic.claude-v2", client=boto3_bedrock, model_kwargs={"max_tokens_to_sample": 600, "temperature": 0, "top_k": 10, "top_p": 0.1 }
+    model_id="anthropic.claude-v2", client=boto3_bedrock, model_kwargs={"max_tokens_to_sample": 900, "temperature": 0, "top_k": 30, "top_p": 0.1 }
 )
-
 

@@ -1,6 +1,7 @@
 import single_task.code_flow as code_flow
 import single_task.rag_flow as rag_flow
 import bedrock
+from datetime import datetime
 
 # Classifiy question type, currently there are 3 types: Type 1, Type 2, Type 0(other type)
 # Answer question corresponding to the question type.
@@ -57,7 +58,10 @@ def get_bank_name(question:str) -> str:
     name = bedrock.llm(prompt)
     return name
 
-def get_answer_type_1(question):
+def get_answer_type_1(question, start_time):
+    '''
+    Hỏi thông tin chung chung chỉ báo của mã <tên mã> trong thời gian gần đây
+    '''
     stock_code = get_stock_code(question)
 
     # Run 3 instructions in parallel:
@@ -71,7 +75,10 @@ def get_answer_type_1(question):
 - Chỉ số EMA cho 14 ngày là {ema[0]}."""
     return ans
 
-def get_answer_type_2(question):
+def get_answer_type_2(question, start_time):
+    '''
+    Thông tin về mã chứng khoán <tên mã> trong năm 2022?
+    '''
     stock_code = get_stock_code(question)
     
     # Run 2 instructions in parallel:
@@ -85,5 +92,11 @@ Trong năm 2022, {bank_name} cũng có các sự kiện quan trọng sau: \n{rag
     return ans
 
 
-def get_answer_type_0(question):
-    return
+def get_answer_type_0(question, start_time):
+
+    rag_answer = rag_flow.ask_rag(question)
+    print(f"_____@TIME EXECUTED_____RAG ANSWER______: {datetime.now() - start_time} \n", rag_answer)
+    code_answer = code_flow.ask_python_code(question, start_time)
+    print(f"_____@TIME EXECUTED_____CODE ANSWER_____: {datetime.now() - start_time} \n", code_answer)
+
+

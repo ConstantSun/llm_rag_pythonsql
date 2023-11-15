@@ -48,7 +48,11 @@ class ContentHandler(EmbeddingsContentHandler):
         return response_json["vectors"]
 
 
-def ask_rag(query):
+def ask_rag(query: str)-> str:
+    '''
+    Param: query, str.
+    Return: Answer for query, str.
+    '''
     content_handler = ContentHandler()
     sbert_batch_embeddings = SagemakerEndpointEmbeddings(
         # credentials_profile_name="credentials-profile-name",
@@ -94,10 +98,10 @@ def ask_rag(query):
     # results = docsearch.similarity_search(query, k=3)  # our search query  # return 3 most relevant docs
     # print(dumps(results, pretty=True))
 
-    RetrievalQAWithSourcesChain(llm=llm, )
+    # RetrievalQAWithSourcesChain(llm=llm, )
     qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever())
     answer = qa.run(query)
 
     # TODO: Rewrite code to answer question from AOS, LLM -> answer 404: can not answer if can't, else answer: 200: answer
-    print(answer)
+    # print(answer)
     return answer

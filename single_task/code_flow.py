@@ -2,7 +2,7 @@ import bedrock
 import single_task.formula as formula
 import single_task.dbtable_info as dbtable_info
 import env
-
+from datetime import datetime
 
 def strim_code(raw_answer: str):
     strim_ans = ""
@@ -19,7 +19,7 @@ def strim_code(raw_answer: str):
     return strim_ans
 
 
-def ask_python_code(question: str):
+def ask_python_code(question: str, start_time):
     """
     Param: question : str
     Return: Result value
@@ -29,19 +29,21 @@ def ask_python_code(question: str):
     Step 2: Convert to python code, might connect to AMZ Athena
     Step 3: Execute step 2's code, return result
     """
-    formula_note = formula.ema
+    formula_note = formula.ema + "\n\n" + formula.sma + "\n\n" + formula.rsi 
     db_info = dbtable_info.dataupcom
 
     prompt_template_for_python_postgre = f"""You are an expert in Stock Market and you are also a SQL expert and Python expert, and you work as both a Data Analysis and a Developer for a Securities Company.
-Given an input question, create a syntactically correct python program, this program might use SQL query to run in Postgresql database:
+Given an input question, create a syntactically correct python program, this program might use SQL query to run in Postgresql database. Unless the user specifies in the question a specific number of examples to obtain, query for at most {env.top_k} results using the LIMIT clause as per SQL. You can order the results to return the most informative data in the database.
+If the question ask for a keyword search, always use LIKE syntax, case-insensitive syntax (%), and LOWER() function. Never use equals sign for a keyword search.
 
+Only use the following formulas if the question mentions any of them:
 {formula_note}
 
 Only use the following database with tables:
 {db_info}
 
-Question: "{question}", you only answer the python code
-    """
+Return program's result in a function named get_result, the get_result function will return an array of target value(s):
+Question: "{question}":"""
     ################################
 
     print("prompt_template_for_python_postgre: \n", prompt_template_for_python_postgre)
@@ -50,7 +52,7 @@ Question: "{question}", you only answer the python code
 
     genereted_python_code_postgresql = get_genereted_python_postgresql_code()
 
-    print("----SQL Postgres---------------\n", genereted_python_code_postgresql)
+    print(f"\n_____@TIME EXECUTED_____SQL Postgres_______: {datetime.now()- start_time}\n\n{genereted_python_code_postgresql}" )
     
     
     ################################
@@ -63,7 +65,7 @@ Question: "{question}", you only answer the python code
     generated_python_athena_code = get_generated_python_athena_code()
     # generated_python_athena_code = strim_code(generated_python_athena_code)
 
-    print("----Athena SQL-----------------\ngenerated_python_athena_code: \n", generated_python_athena_code)
+    print(f"_____@TIME EXECUTED_____Athena SQL_______: {datetime.now()- start_time}\n\n{generated_python_athena_code}\n")
     
     generated_python_athena_code = strim_code(generated_python_athena_code)
 

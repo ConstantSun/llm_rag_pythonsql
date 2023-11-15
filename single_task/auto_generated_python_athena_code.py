@@ -2,30 +2,33 @@ import pandas as pd
 from pyathena import connect
 
 def get_result():
-    # Connect to Athena
-    conn = connect(aws_access_key_id=None, 
-                   aws_secret_access_key=None,
-                   s3_staging_dir='s3://abst-test-athena-log/',
-                   region_name='us-east-1')
-    
-    cursor = conn.cursor()
+  conn = connect(aws_access_key_id=None, 
+                aws_secret_access_key=None,
+                s3_staging_dir='s3://abst-test-athena-log/', 
+                region_name='us-east-1')
+  
+  cursor = conn.cursor()
 
-    # Query to get the closing prices for VCB
-    query = """
+  query = """
     SELECT dtyyyymmdd, close
     FROM absdb.v2 
     WHERE ticker = 'VCB'
-    ORDER BY dtyyyymmdd
-    """
+    ORDER BY dtyyyymmdd DESC 
+    LIMIT 14
+  """
 
-    # Load data into Pandas DataFrame
-    df = pd.read_sql(query, conn)
+  df = pd.read_sql(query, conn)
+  
+  prev_close = 0
+  ad = 0
+  for _, row in df.iterrows():
+    date, close = row
+    change = close - prev_close
+    if change > 0:
+      ad += change
+    prev_close = close
 
-    # Calculate EMA  
-    n = 14 # Number of periods for EMA
-    df['EMA'] = df['close'].ewm(span=n, adjust=False).mean()
-
-    # Return EMA values
-    return df['EMA'].tolist()
-
-print(get_result())
+  return [ad]
+  
+result = get_result()
+print("AD indicator for VCB:", result[0])

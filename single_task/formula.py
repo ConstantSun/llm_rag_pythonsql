@@ -7,8 +7,8 @@ Days: The total number of days.
 Note: EMA_today value of the first day equals to Stock closing price today."""
 
 
-sma = """
-"""
+sma = """This is SMA (Simple Moving Average) formula:
+SMA = Mean of Total Closing Price within 14 days."""
 
 
 rsi_vi = """When the question mentions RSI, it means Relative Strength Index in Securities. RSI của mã chứng khoán dao động từ 0 đến 100. Công thức:
