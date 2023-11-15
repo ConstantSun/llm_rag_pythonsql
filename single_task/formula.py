@@ -1,4 +1,4 @@
-ema = """This is EMA formula for today (EMA_today), to calculate EMA_today value, you need to calculate EMA yesterday value (EMA_yesterday) :
+ema = """To calculate EMA_today value, you need to calculate EMA yesterday value (EMA_yesterday), e.g: if you want to calculate EMA value for N days, you need to calculate EMA value of 1st day, EMA value of 2nd day, EMA value of 3rd day, etc, EMA value of N-th day (this EMA value of N-th day is the target and the result).
 EMA_today = (stock closing price in today - EMA_yesterday) * (2 / (1 + Days)) + EMA_yesterday
 Where :
 EMA_today: EMA value today,
