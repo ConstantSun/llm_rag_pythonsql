@@ -4,6 +4,7 @@ import single_task.dbtable_info as dbtable_info
 import env
 from datetime import datetime
 
+
 def strim_code(raw_answer: str):
     strim_ans = ""
     flag = False
@@ -52,6 +53,7 @@ Question: "{question}" """
     ################################
 
     print("prompt_template_for_python_postgre: \n", prompt_template_for_python_postgre)
+    
     def get_genereted_python_postgresql_code():
         return bedrock.llm(prompt_template_for_python_postgre)
 
@@ -64,6 +66,7 @@ Question: "{question}" """
     prompt_template_for_python_athena = f"""Convert the following python code, so that it connects to Amazon Athena database instead of PostgreSQL, using PyAthena library, Amazon Athena table name is the same as table's name in PostgreSQL, the Amazon Athena table has a prefix: "{dbtable_info.dataupcom_db_name}", aws_access_key_id is {env.aws_access_key_id}, aws_secret_access_key is {env.aws_secret_access_key}, s3 bucket is {env.athena_s3_bucket}, region_name is {env.region_name}, return program's result in a function named get_result, the get_result function will return an array of target value(s):
     {genereted_python_code_postgresql}
     """
+    
     def get_generated_python_athena_code():
         return bedrock.llm(prompt_template_for_python_athena)
     
@@ -81,14 +84,14 @@ Question: "{question}" """
     # write that code above to a .py file
     text_file = open("single_task/auto_generated_python_athena_code.py", "w")
     text_file.write(generated_python_athena_code)
+    text_file.close()
 
     # import that file and get the result
-    import time
-    time.sleep(1)
     import single_task.auto_generated_python_athena_code as auto_generated_python_athena_code
     final_code_result = auto_generated_python_athena_code.get_result()
 
     return final_code_result
+
 
 def test_ask_python_code(question: str):
 

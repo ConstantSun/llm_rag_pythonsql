@@ -1,6 +1,7 @@
-dataupcom_db_name = "absdb"
+dataupcom_db_name = "absdb" # TODO: change this to your own database name, note : DO NOT USE characters other than a-z, A-Z, 0-9.
+table_name = "v2"  # TODO: change this to your own table name, note : DO NOT USE characters other than a-z, A-Z, 0-9.
 dataupcom = f"""Database name: {dataupcom_db_name}
-Table name: v2
+Table name: {table_name}
 Columns:
 "ticker": string, description: Ticker symbol or Stock symbol
 "dtyyyymmdd": bigint, description: date time, format : year-month-day
