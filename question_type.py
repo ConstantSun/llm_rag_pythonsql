@@ -98,5 +98,3 @@ def get_answer_type_0(question, start_time):
     print(f"_____@TIME EXECUTED_____RAG ANSWER______: {datetime.now() - start_time} \n", rag_answer)
     code_answer = code_flow.ask_python_code(question, start_time)
     print(f"_____@TIME EXECUTED_____CODE ANSWER_____: {datetime.now() - start_time} \n", code_answer)
-
-
