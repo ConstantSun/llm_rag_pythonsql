@@ -8,5 +8,6 @@ Columns:
 "high": double, description: stock highest price
 "low": double, description: stock lowest price
 "close": double, description: stock closing price
-"volume": bigint, description: trading volume"""
+"volume": bigint, description: trading volume
+Note: Colum "dtyyyymmdd" is bigint, therefore instead of EXTRACT time from dtyyyymmdd, compare it to a range, e.g: to check if dtyyyymmdd is within May, 2023, check if dtyyyymmdd is less or equal to 20230531 and dtyyyymmdd is greater or equal to 20230501"""
 
