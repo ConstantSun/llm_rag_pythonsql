@@ -1,6 +1,6 @@
 # RaQL Chatbot
 
-RaQL Chatbot: Not only can retrieve and extract your Data source (knowledge document) based on RAG, but also can analyze data with auto-generated-progamming-code and connect to your Database to answer your question !
+RaQL Chatbot: Not only retrieve and extract your Knowledge document based on RAG, but also analyze complex data with auto-generated-progamming-code, gain insight into your Database to answer your question ! 
 
 ## App Logic Flow:
 <img width="1414" alt="image" src="https://github.com/ConstantSun/llm_rag_pythonsql/assets/26327367/ad16d7c9-4f87-41f0-a422-d82be94d1efb">
