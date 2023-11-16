@@ -1,10 +1,12 @@
-ema = """To calculate EMA_today value, you need to calculate EMA yesterday value (EMA_yesterday), e.g: if you want to calculate EMA value for N days, you need to calculate EMA value of 1st day, EMA value of 2nd day, EMA value of 3rd day, etc, EMA value of N-th day (this EMA value of N-th day is the target and the result).
-EMA_today = (stock closing price in today - EMA_yesterday) * (2 / (1 + Days)) + EMA_yesterday
+ema = """This is EMA formula: 
+To calculate EMA_today value, you need to calculate EMA yesterday value (EMA_yesterday), e.g: if you want to calculate EMA value for N days, you need to calculate EMA value of 1st day, EMA value of 2nd day, EMA value of 3rd day, etc, EMA value of N-th day (this EMA value of N-th day is the target and the result).
+EMA_today = (stock closing price in today - EMA_yesterday) * (2 / (1 + constant N)) + EMA_yesterday
 Where :
 EMA_today: EMA value today,
 EMA_yesterday: EMA value yesterday,
-Days: The total number of days.
-Note: EMA_today value of the first day equals to Stock closing price today."""
+N: a constant equals to the total number of days.
+Note: EMA_today value of the first day equals to Stock closing price today.
+"""
 
 
 sma = """This is SMA (Simple Moving Average) formula:
