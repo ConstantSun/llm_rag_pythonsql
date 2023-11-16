@@ -19,23 +19,23 @@ def postgres_to_athena(code):
 
   return code
 
-original_code = """
-import psycopg2 
-import pandas as pd
+# original_code = """
+# import psycopg2 
+# import pandas as pd
 
-conn = psycopg2.connect(database="mydb", user="postgres", password="123", host="localhost", port="5432")
+# conn = psycopg2.connect(database="mydb", user="postgres", password="123", host="localhost", port="5432")
 
-df = pd.read_sql('SELECT * FROM public.users', conn)
-"""
+# df = pd.read_sql('SELECT * FROM public.users', conn)
+# """
 
-file = open('draft_postgres.txt', 'r')
-code = file.read()
-file.close()
+# file = open('draft_postgres.txt', 'r')
+# code = file.read()
+# file.close()
 
-# write that code above to a .py file
-text_file = open("./draft_athena_2.py", "w")
-text_file.write(postgres_to_athena(code))
-text_file.close()
+# # write that code above to a .py file
+# text_file = open("./draft_athena_2.py", "w")
+# text_file.write(postgres_to_athena(code))
+# text_file.close()
 
-print(postgres_to_athena(code))
+# print(postgres_to_athena(code))
 
