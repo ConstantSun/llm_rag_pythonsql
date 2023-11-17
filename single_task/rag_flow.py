@@ -56,7 +56,7 @@ def ask_rag(query: str)-> str:
     content_handler = ContentHandler()
     sbert_batch_embeddings = SagemakerEndpointEmbeddings(
         # credentials_profile_name="credentials-profile-name",
-        endpoint_name="huggingface-pytorch-inference-2023-10-20-04-45-11-397", # TODO: change this to your own sbert endpoint
+        endpoint_name="huggingface-pytorch-inference-2023-11-17-04-03-54-290", # TODO: change this to your own sbert endpoint
         region_name="us-east-1",  #  TODO: change this to your sagemaker deployed sbert endpoint Region 
         content_handler=content_handler,
     )

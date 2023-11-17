@@ -30,4 +30,7 @@ def main():
 
     print(">>>>>>>>>>>>>>>>>>>>>>\nFINAL ANSWER: ", answer)
 
-main()
+# main()
+res = code_flow.test_ask_python_code("RSI của mã Chứng khoán DVN trong 14 ngày gần nhất")
+print("____res:____")
+print(res)

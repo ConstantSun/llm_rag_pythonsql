@@ -64,7 +64,7 @@ def get_answer_type_1(question, start_time):
     '''
     stock_code = get_stock_code(question)
 
-    # Run 3 instructions in parallel:
+    # TODO: Run 3 instructions in parallel:
     rsi = code_flow.ask_python_code(f"Chỉ số RSI của mã {stock_code} là gì?")
     sma = code_flow.ask_python_code(f"Chỉ số SMA của mã {stock_code} cho 14 ngày là gì?")
     ema = code_flow.ask_python_code(f"Chỉ số EMA của mã {stock_code} cho 14 ngày là gì?")
@@ -81,7 +81,7 @@ def get_answer_type_2(question, start_time):
     '''
     stock_code = get_stock_code(question)
     
-    # Run 2 instructions in parallel:
+    # TODO: Run 2 instructions in parallel:
     percentage = code_flow.ask_python_code(f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?")
     
     bank_name = get_bank_name(question)
@@ -98,4 +98,4 @@ def get_answer_type_0(question, start_time):
     print(f"_____@TIME EXECUTED_____RAG ANSWER______: {datetime.now() - start_time} \n", rag_answer)
     code_answer = code_flow.ask_python_code(question, start_time)
     print(f"_____@TIME EXECUTED_____CODE ANSWER_____: {datetime.now() - start_time} \n", code_answer)
-    return "rag_answer:\n" + rag_answer + "\n--------\n" + "code_answer:\n" + code_answer
+    return "rag_answer:\n" + rag_answer + "\n--------\n" + "code_answer:\n" + ' '.join(str(e) for e in code_answer) 
