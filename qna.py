@@ -4,7 +4,8 @@ from datetime import datetime
 
 
 def main():
-    user_question = "Cho tôi thông tin chỉ báo AD của mã VCB?"
+    # user_question = "Cho tôi thông tin chỉ báo AD của mã VCB?"
+    user_question = "Tôi muốn biết thông tin về mã chứng khoán ABB của Ngân hàng thương mại cổ phần An Bình trong năm 2022?"
     start_time = datetime.now()
     user_qstn_type = question_type.get_question_type(user_question)
     print("_____@TIME EXECUTED_____user_qstn_type: ", datetime.now() - start_time)
@@ -30,7 +31,8 @@ def main():
 
     print(">>>>>>>>>>>>>>>>>>>>>>\nFINAL ANSWER: ", answer)
 
-# main()
-res = code_flow.test_ask_python_code("RSI của mã Chứng khoán DVN trong 14 ngày gần nhất")
-print("____res:____")
-print(res)
+main()
+
+# res = code_flow.test_ask_python_code("RSI của mã Chứng khoán DVN trong 14 ngày gần nhất")
+# print("____res:____")
+# print(res)

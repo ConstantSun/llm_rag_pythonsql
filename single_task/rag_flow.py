@@ -81,10 +81,9 @@ def ask_rag(query: str)-> str:
 
 
     auth = AWSV4SignerAuth(creds, "us-east-1", service)   # TODO: change your region
-    index_name = "rag-sbert"    # TODO: change your index_name
+    index_name = "infloatbase"    # TODO: change your index_name
     docsearch = OpenSearchVectorSearch(
-        # "https://1n3li4pv4s7jhgykpmie.us-east-1.aoss.amazonaws.com:443",  # TODO: Change your AOS endpoint here
-        "https://emvmyujtflaijr60ses3.us-east-1.aoss.amazonaws.com:443",  # TODO: Change your AOS endpoint here
+        "https://f4rkudrfg2b0fp2a8qhi.us-east-1.aoss.amazonaws.com:443",  # TODO: Change your AOS endpoint here
         index_name,
         sbert_batch_embeddings,
         http_auth=auth,

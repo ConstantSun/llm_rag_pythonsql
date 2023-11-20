@@ -1,6 +1,6 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: MIT-0
-"""Helper utilities for working with Amazon Bedrock from Python notebooks"""
+"""Helper utilities for working with Amazon Bedrock """
 # Python Built-Ins:
 import os
 from typing import Optional

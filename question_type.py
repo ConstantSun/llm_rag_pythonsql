@@ -2,6 +2,7 @@ import single_task.code_flow as code_flow
 import single_task.rag_flow as rag_flow
 import bedrock
 from datetime import datetime
+from single_task import multi_process
 
 # Classifiy question type, currently there are 3 types: Type 1, Type 2, Type 0(other type)
 # Answer question corresponding to the question type.
@@ -65,9 +66,11 @@ def get_answer_type_1(question, start_time):
     stock_code = get_stock_code(question)
 
     # TODO: Run 3 instructions in parallel:
-    rsi = code_flow.ask_python_code(f"Chỉ số RSI của mã {stock_code} là gì?")
-    sma = code_flow.ask_python_code(f"Chỉ số SMA của mã {stock_code} cho 14 ngày là gì?")
-    ema = code_flow.ask_python_code(f"Chỉ số EMA của mã {stock_code} cho 14 ngày là gì?")
+    # rsi = code_flow.ask_python_code(f"Chỉ số RSI của mã {stock_code} là gì?")
+    # sma = code_flow.ask_python_code(f"Chỉ số SMA của mã {stock_code} cho 14 ngày là gì?")
+    # ema = code_flow.ask_python_code(f"Chỉ số EMA của mã {stock_code} cho 14 ngày là gì?")
+
+    rsi, sma, ema = multi_process.get_answer([f"Chỉ số RSI của mã {stock_code} là gì?", f"Chỉ số SMA của mã {stock_code} cho 14 ngày là gì?", f"Chỉ số EMA của mã {stock_code} cho 14 ngày là gì?" ])
     
     ans = f"""Dựa trên dữ liệu gần nhất cho mã chứng khoán {stock_code}:
 - Chỉ số RSI là {rsi[0]}.
@@ -81,14 +84,18 @@ def get_answer_type_2(question, start_time):
     '''
     stock_code = "ABB"
     
-    # TODO: Run 2 instructions in parallel:
-    percentage = code_flow.ask_python_code(f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?")
-    
-    # bank_name = get_bank_name(question)
+    # TODO: Run 3 instructions in parallel:
+    # percentage = code_flow.ask_python_code(f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?")
+    percentage = 400
+    # # bank_name = get_bank_name(question)
     bank_name = "Ngân hàng TMCP An Bình"
-    rag_answer_1 = rag_flow.ask_rag(f"Chỉ xét trong năm 2022, không xét các năm khác, {bank_name} có các sự kiện quan trọng nào?")
-    rag_answer_2 = rag_flow.ask_rag(f"Trong năm 2022, {bank_name} đạt được những giải thưởng gì ?")
+    # rag_answer_1 = rag_flow.ask_rag(f"Chỉ xét trong năm 2022, không xét các năm khác, {bank_name} có các sự kiện quan trọng nào?")
+    # rag_answer_2 = rag_flow.ask_rag(f"Trong năm 2022, {bank_name} đạt được những giải thưởng gì ?")
     
+    rag_answer_1, rag_answer_2 = multi_process.get_answer([ f"Chỉ xét trong năm 2022, không xét các năm khác, {bank_name} có các sự kiện quan trọng nào?",
+                                                                       f"Trong năm 2022, {bank_name} đạt được những giải thưởng gì ?"])
+
+
     ans = f"""Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn {percentage} phần trăm so với năm 2021.
 Trong năm 2022, {bank_name} cũng có các sự kiện quan trọng sau: \n{rag_answer_1}
 
@@ -97,6 +104,7 @@ Trong năm 2022, {bank_name} cũng có các sự kiện quan trọng sau: \n{rag
 
 
 def get_answer_type_0(question, start_time):
+    # TODO: Run 2 instructions in parallel:
 
     rag_answer = rag_flow.ask_rag(question)
     print(f"_____@TIME EXECUTED_____RAG ANSWER______: {datetime.now() - start_time} \n", rag_answer)
