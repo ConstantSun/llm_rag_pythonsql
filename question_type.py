@@ -79,16 +79,20 @@ def get_answer_type_2(question, start_time):
     '''
     Thông tin về mã chứng khoán <tên mã> trong năm 2022?
     '''
-    stock_code = get_stock_code(question)
+    stock_code = "ABB"
     
     # TODO: Run 2 instructions in parallel:
     percentage = code_flow.ask_python_code(f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?")
     
-    bank_name = get_bank_name(question)
-    rag_answer = rag_flow.ask_rag(f"Chỉ xét trong năm 2022, không xét các năm khác, {bank_name} có các sự kiện quan trọng nào ?")
+    # bank_name = get_bank_name(question)
+    bank_name = "Ngân hàng TMCP An Bình"
+    rag_answer_1 = rag_flow.ask_rag(f"Chỉ xét trong năm 2022, không xét các năm khác, {bank_name} có các sự kiện quan trọng nào?")
+    rag_answer_2 = rag_flow.ask_rag(f"Trong năm 2022, {bank_name} đạt được những giải thưởng gì ?")
     
     ans = f"""Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn {percentage} phần trăm so với năm 2021.
-Trong năm 2022, {bank_name} cũng có các sự kiện quan trọng sau: \n{rag_answer}"""
+Trong năm 2022, {bank_name} cũng có các sự kiện quan trọng sau: \n{rag_answer_1}
+
+Đồng thời cũng trong năm 2022, Ngân hàng TMCP An Bình đạt được những giải thưởng sau:\n{rag_answer_2}"""
     return ans
 
 

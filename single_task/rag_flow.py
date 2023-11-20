@@ -99,7 +99,8 @@ def ask_rag(query: str)-> str:
     # print(dumps(results, pretty=True))
 
     # RetrievalQAWithSourcesChain(llm=llm, )
-    qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever())
+    # qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever())
+    qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever(search_kwargs={'k': 6}),return_source_documents=False)
     answer = qa.run(query)
 
     # TODO: Rewrite code to answer question from AOS, LLM -> answer 404: can not answer if can't, else answer: 200: answer
