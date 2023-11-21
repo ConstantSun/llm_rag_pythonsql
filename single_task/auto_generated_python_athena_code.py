@@ -14,8 +14,8 @@ def get_result():
               
     df = pd.read_sql(query, conn)
     
-    ad = ((2 * df['close'].iloc[0]) - df['close'].iloc[1]) / df['close'].iloc[1] * 100
-
+    ad = ((2 * df['close'].iloc[0]) - df['close'].iloc[1]) / (df['close'].iloc[0] + df['close'].iloc[1]) * df['close'].iloc[0]
+    
     return [ad]
     
   except:

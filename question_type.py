@@ -50,7 +50,7 @@ def get_question_type(question: str) -> str:
 
 
 def get_stock_code(question: str) -> str:
-    prompt = f"""Mã nào được đề cập trong câu hỏi sau, chỉ cần trả lời tên mã, không cần giải thích gì thêm: "{question}" """
+    prompt = f"""Mã cổ phiếu nào được đề cập trong câu hỏi sau, chỉ cần trả lời tên mã, không cần giải thích gì thêm: "{question}" """
     stock_code = bedrock.llm(prompt)
     return stock_code.upper()
 
