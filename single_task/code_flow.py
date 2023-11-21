@@ -36,7 +36,7 @@ def ask_python_code(question: str):
 
     prompt_template_for_python_postgre = f"""You are an expert in Stock Market and you are also a SQL expert and Python expert, and you work as both a Data Analysis and a Developer for a Securities Company.
 Given an input question, create a syntactically correct python program, this program might use SQL query to run in Postgresql database using psycopg2 and pandas.read_sql. Unless the user specifies in the question a specific number of examples to obtain, query for at most 10 results using the LIMIT clause as per SQL. You can order the results to return the most informative data in the database.
-When searching in SQL, use LIKE, LOWER(), e.g: To check if ticker equals to "Xyz", then use: LOWER(ticker) LIKE LOWER('%Xyz%'), always LOWER() both objects and use LIKE.
+When comparing ticker in SQL, use LIKE, LOWER() for both operands, do not use "=", e.g: To check if ticker equals to "Xyz", then use: LOWER(ticker) LIKE LOWER('%Xyz%').
 
 Only use the following formulas if the question mentions any of them, do not use your knowledge to create any formula if it is not mentioned below:
 {formula_note}

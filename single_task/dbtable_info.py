@@ -4,9 +4,10 @@ dataupcom = f"""Database name: {dataupcom_db_name}
 Table name: {table_name}
 Columns:
 "ticker": string, description: Ticker symbol or Stock symbol
-"dtyyyymmdd": date, description: date type
+"dtyyyymmdd": date type, description: date type
 "open": double, description: stock opening price
 "high": double, description: stock highest price
 "low": double, description: stock lowest price
 "close": double, description: stock closing price
-"volume": bigint, description: trading volume"""
+"volume": bigint, description: trading volume
+Note: dtyyyymmdd has Date type, therefore DO NOT compare date BETWEEN varchar() and varchar()"""

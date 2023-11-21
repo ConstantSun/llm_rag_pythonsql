@@ -19,7 +19,7 @@ Mẫu câu hỏi số 2: Thông tin về mã chứng khoán <tên mã> trong nă
 
 Biết rằng:
 - Nếu hỏi dạng mẫu câu hỏi số 1, có nghĩa là muốn hỏi thông tin chung chung chỉ báo của mã <tên mã> trong thời gian gần đây (hay dạo này), và không hỏi cụ thể chỉ báo nào. Nếu hỏi cụ thể về một chỉ báo <tên chỉ báo> thì câu hỏi đó sẽ không thuộc mẫu câu hỏi số 1. Nếu hỏi cụ thể về thời gian, ví dụ : trong năm 2022, trong tháng 1, trong ngày 3 tháng 5, vân vân, thì câu hỏi sẽ không thuộc mẫu câu hỏi số 1.
-- Nếu hỏi dạng mẫu câu hỏi số 2, có nghĩa là muốn hỏi thông tin chung chung về mã chứng khoán <tên mã> trong thời gian là năm 2022. Nếu hỏi cụ thể về một hay nhiều thông tin nào đó của mã chứng khoán <tên mã> thì câu hỏi đó sẽ không thuộc mẫu câu hỏi số 2. Nếu hỏi vào thời gian khác năm 2022, ví dụ: hỏi năm 2021, hay năm 2020, vân vân, thì câu hỏi không thuộc mẫu câu hỏi số 2.
+- Nếu hỏi dạng mẫu câu hỏi số 2, có nghĩa là muốn hỏi thông tin chung về mã chứng khoán tên là <tên mã> trong thời gian là năm 2022. Nếu hỏi cụ thể về một hay nhiều thông tin nào đó của mã chứng khoán <tên mã> thì câu hỏi đó sẽ không thuộc mẫu câu hỏi số 2. Nếu hỏi vào thời gian khác năm 2022, ví dụ: hỏi năm 2021, hay năm 2020, vân vân, thì câu hỏi không thuộc mẫu câu hỏi số 2.
 
 Đây là câu hỏi bạn cần trả lời dựa trên các thông tin ở trên: 
 Câu hỏi: {question}
@@ -31,7 +31,7 @@ def get_question_type(question: str) -> str:
     Return question type: 0,1,2 or unknown.
     '''
     prompt = get_classify_question_type_prompt(question)
-    answer = bedrock.llm(prompt)
+    answer = bedrock.ask_direct(prompt)
     print("get_question_type answer:\n", answer)
     for line in answer.splitlines():
         line = line.lower()
@@ -125,6 +125,8 @@ def get_answer_type_0(question, start_time):
 
     rag_answer, code_answer = multi_thread.run_multi_funcs([[rag_flow.ask_rag, question], 
                                                             [code_flow.ask_python_code, question]])
-
+    if len(code_answer) == 0 or code_answer[0] == "no query result":
+        if "xin lỗi" in (rag_answer.lower()):
+            return "Hiện tại chưa có thông tin về mã chứng khoán của quý khách. Vui lòng xem thêm tại đường link sau: https://itrade.abs.vn/"
     return "rag_answer:\n" + rag_answer + "\n--------\n" + "code_answer:\n" + ' '.join(str(e) for e in code_answer) 
 
