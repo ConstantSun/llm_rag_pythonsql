@@ -5,7 +5,16 @@ from datetime import datetime
 
 def main():
     # user_question = "Cho tôi thông tin chỉ báo AD của mã VCB?"
-    user_question = "Tôi muốn biết thông tin về mã chứng khoán ABB của Ngân hàng thương mại cổ phần An Bình trong năm 2022?"
+    # user_question = "Tôi muốn biết thông tin về mã chứng khoán ABB của Ngân hàng thương mại cổ phần An Bình trong năm 2022?"
+    
+    user_question = "RSI của mã Chứng khoán DVN trong 14 ngày gần nhất ?"  # ok, need to combine ans
+    user_question = "Chỉ báo của mã ABB dạo này thế nào?" # error running rag, broken     raise ValueError(f"Error raised by bedrock service: {e}")
+# ValueError: Error raised by bedrock service: An error occurred while reading from response stream: ('Connection broken: IncompleteRead(0 bytes read, 523 more expected)', IncompleteRead(0 bytes read, 523 more expected))
+    user_question = "Công ty chứng khoán của bạn có những dịch vụ gì?"  # ok, need to combine ans
+    
+    user_question = "Cổ phiếu mã JKL có biến động thế nào trong tháng 10?" # ok, need to combine ans ---
+    user_question = "Tôi muốn biết thông tin về mã chứng khoán ABB của Ngân hàng thương mại cổ phần An Bình trong năm 2022? "
+
     start_time = datetime.now()
     user_qstn_type = question_type.get_question_type(user_question)
     print("_____@TIME EXECUTED_____user_qstn_type: ", datetime.now() - start_time)
@@ -30,6 +39,7 @@ def main():
     # res = code_flow.ask_python_code("Cho tôi thông tin chỉ báo AD của mã VCB?")
 
     print(">>>>>>>>>>>>>>>>>>>>>>\nFINAL ANSWER: ", answer)
+    print("_____@TIME EXECUTED_____final: ", datetime.now() - start_time)
 
 main()
 

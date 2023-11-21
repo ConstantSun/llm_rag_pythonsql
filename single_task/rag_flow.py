@@ -100,7 +100,7 @@ def ask_rag(query: str)-> str:
     # RetrievalQAWithSourcesChain(llm=llm, )
     # qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever())
     # query = "Thật là kì lạ!"
-    qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever(search_kwargs={'k': 3}),return_source_documents=False)
+    qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever(search_kwargs={'k': 5}),return_source_documents=False)
     print("---- RAG Query 1---- in file: ", query)
     answer = qa.run(query)
 

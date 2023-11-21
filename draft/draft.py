@@ -1,38 +1,8 @@
-import pandas as pd
-from pyathena import connect
+def func1(x):
+  return x+10
 
-def get_result():
+def func2(x):
+  return x+100
 
-  conn = connect(aws_access_key_id=None, 
-                aws_secret_access_key=None,
-                s3_staging_dir='s3://abst-test-athena-log/', 
-                region_name='us-east-1')
-
-  query = """
-  SELECT dtyyyymmdd, close 
-  FROM absdb.v2 
-  WHERE ticker = 'ABB'
-  ORDER BY dtyyyymmdd DESC
-  LIMIT 14
-  """
-
-  df = pd.read_sql(query, conn)
-
-  # Rest of logic is same
-  df = df.sort_values(by='dtyyyymmdd')
-
-  closes = df['close'].tolist()
-  closes.reverse()
-
-  ema_yesterday = closes[0] 
-  result = []
-
-  for i in range(1, len(closes)):
-    ema_today = (closes[i] - ema_yesterday) * (2 / (1 + 14)) + ema_yesterday
-    result.append(ema_today)
-    ema_yesterday = ema_today
-
-  print("result: ", result)
-  return result
-
-result = get_result()
+func_list = [func1, func2]
+print(func_list[0](5))

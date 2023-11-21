@@ -20,7 +20,7 @@ def strim_code(raw_answer: str):
     return strim_ans
 
 
-def ask_python_code(question: str, start_time):
+def ask_python_code(question: str):
     """
     Param: question : str
     Return: Result value
@@ -30,7 +30,8 @@ def ask_python_code(question: str, start_time):
     Step 2: Convert to python code, might connect to AMZ Athena
     Step 3: Execute step 2's code, return result
     """
-    formula_note = formula.ema + "\n\n" + formula.sma + "\n\n" + formula.rsi 
+    start_time = datetime.now()
+    formula_note = formula.ema + "\n\n" + formula.sma + "\n\n" + formula.rsi_2
     db_info = dbtable_info.dataupcom
 
     prompt_template_for_python_postgre = f"""You are an expert in Stock Market and you are also a SQL expert and Python expert, and you work as both a Data Analysis and a Developer for a Securities Company.
