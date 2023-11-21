@@ -97,3 +97,29 @@ llm = Bedrock(
     model_id="anthropic.claude-v2", client=boto3_bedrock, model_kwargs={"max_tokens_to_sample": 900, "temperature": 0, "top_k": 30, "top_p": 0.1 }
 )
 
+
+
+
+import boto3
+import json
+brt = boto3_bedrock
+
+
+def ask_direct(question: str) -> str:
+    body = json.dumps({
+        "prompt": f"\n\nHuman: {question}\n\nAssistant:",
+        "max_tokens_to_sample": 900,
+        "temperature": 0,
+        "top_p": 0.1,
+    })
+
+    modelId = 'anthropic.claude-v2'
+    accept = 'application/json'
+    contentType = 'application/json'
+
+    response = brt.invoke_model(body=body, modelId=modelId, accept=accept, contentType=contentType)
+
+    response_body = json.loads(response.get('body').read())
+
+    # text
+    return (response_body.get('completion'))

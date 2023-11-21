@@ -85,17 +85,19 @@ def get_answer_type_2(question, start_time):
     stock_code = "ABB"
     
     # TODO: Run 3 instructions in parallel:
-    # percentage = code_flow.ask_python_code(f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?")
+    percentage = code_flow.ask_python_code(f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?")
     percentage = 400
     # # bank_name = get_bank_name(question)
     bank_name = "Ngân hàng TMCP An Bình"
     # rag_answer_1 = rag_flow.ask_rag(f"Chỉ xét trong năm 2022, không xét các năm khác, {bank_name} có các sự kiện quan trọng nào?")
     # rag_answer_2 = rag_flow.ask_rag(f"Trong năm 2022, {bank_name} đạt được những giải thưởng gì ?")
     
-    rag_answer_1, rag_answer_2 = multi_process.get_answer([ f"Chỉ xét trong năm 2022, không xét các năm khác, {bank_name} có các sự kiện quan trọng nào?",
+    rag_answer_1, rag_answer_2 = multi_process.get_answer([ f"Trong năm 2022, {bank_name} có các sự kiện quan trọng nào?",
                                                                        f"Trong năm 2022, {bank_name} đạt được những giải thưởng gì ?"])
 
-
+    print("rag_answer_1:", rag_answer_1)
+    print("rag_answer_2:", rag_answer_2)
+    print("<3 "*60)
     ans = f"""Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn {percentage} phần trăm so với năm 2021.
 Trong năm 2022, {bank_name} cũng có các sự kiện quan trọng sau: \n{rag_answer_1}
 

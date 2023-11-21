@@ -6,46 +6,30 @@ def get_result():
     conn = pyathena.connect(aws_access_key_id=None, aws_secret_access_key=None, s3_staging_dir='s3://abst-test-athena-log/', region_name='us-east-1')
     cursor = conn.cursor()
     
-    # query = """SELECT high, low, close 
-    #           FROM absdb.v2 
-    #           WHERE LOWER(ticker) LIKE LOWER('%VCB%')
-    #           ORDER BY dtyyyymmdd DESC
-    #           LIMIT 10"""
+    # Calculate RSI
+    query = """
+    SELECT ticker, dtyyyymmdd, close 
+    FROM absdb.v3
+    WHERE LOWER(ticker) LIKE LOWER('%ABB%')
+    ORDER BY dtyyyymmdd DESC
+    LIMIT 14"""
     
-    query = """WITH prices AS (
-      SELECT ticker, dtyyyymmdd, close
-      FROM absdb.v2
-      WHERE LOWER(ticker) LIKE LOWER('%CV%')
-      ORDER BY dtyyyymmdd DESC
-      LIMIT 14
-    ),
-    gains AS (
-      SELECT ticker, dtyyyymmdd, close - LAG(close) OVER (ORDER BY dtyyyymmdd) AS gain
-      FROM prices
-    ), 
-    losses AS (
-      SELECT ticker, dtyyyymmdd, LAG(close) OVER (ORDER BY dtyyyymmdd) - close AS loss
-      FROM prices 
-    ),
-    avg_gains AS (
-      SELECT AVG(gain) avg_gain
-      FROM gains
-    ),
-    avg_losses AS (
-      SELECT AVG(loss) avg_loss
-      FROM losses
-    )
-    SELECT 100 - (100 / (1 + (avg_gain / avg_loss))) AS rsi
-    FROM avg_gains, avg_losses
-    LIMIT 1;"""
-              
     df = pd.read_sql(query, conn)
-    print("___df:")
-    print(df)
+    df = df.sort_values('dtyyyymmdd')
     
-    ad = ((df['high'] - df['low']) / (df['high'] + df['low'])) * df['close']
+    delta = df['close'].diff()
+    up, down = delta.copy(), delta.copy()
+    up[up < 0] = 0
+    down[down > 0] = 0
     
-    return ad.tolist()
+    avg_gain = up.rolling(14).mean()
+    avg_loss = down.abs().rolling(14).mean()
+    
+    rs = avg_gain / avg_loss
+    rsi = 100 - (100 / (1 + rs))
+    rsi_abb = round(rsi.iloc[-1], 2)
+    
+    return [rsi_abb]
     
   except:
     return ["no query result"]

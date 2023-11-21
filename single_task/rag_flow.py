@@ -54,14 +54,14 @@ def ask_rag(query: str)-> str:
     Return: Answer for query, str.
     '''
     content_handler = ContentHandler()
-    sbert_batch_embeddings = SagemakerEndpointEmbeddings(
+    infloatbase_batch_embeddings = SagemakerEndpointEmbeddings(
         # credentials_profile_name="credentials-profile-name",
         endpoint_name="huggingface-pytorch-inference-2023-11-17-04-03-54-290", # TODO: change this to your own sbert endpoint
         region_name="us-east-1",  #  TODO: change this to your sagemaker deployed sbert endpoint Region 
         content_handler=content_handler,
     )
     
-    print("Sbert: ", sbert_batch_embeddings)
+    print("Infloat e5-base: ", infloatbase_batch_embeddings)
     service = 'aoss'
 
 
@@ -85,7 +85,7 @@ def ask_rag(query: str)-> str:
     docsearch = OpenSearchVectorSearch(
         "https://f4rkudrfg2b0fp2a8qhi.us-east-1.aoss.amazonaws.com:443",  # TODO: Change your AOS endpoint here
         index_name,
-        sbert_batch_embeddings,
+        infloatbase_batch_embeddings,
         http_auth=auth,
         timeout = 100,
         use_ssl = True,
@@ -99,9 +99,13 @@ def ask_rag(query: str)-> str:
 
     # RetrievalQAWithSourcesChain(llm=llm, )
     # qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever())
-    qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever(search_kwargs={'k': 6}),return_source_documents=False)
+    # query = "Thật là kì lạ!"
+    qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever(search_kwargs={'k': 3}),return_source_documents=False)
+    print("---- RAG Query 1---- in file: ", query)
     answer = qa.run(query)
 
     # TODO: Rewrite code to answer question from AOS, LLM -> answer 404: can not answer if can't, else answer: 200: answer
-    # print(answer)
+    # print("---- RAG Query 1 1---- in file: ", query)
+    print("---- RAG Answer---- in file: ")
+    print(query, "\n-\n", answer)
     return answer
