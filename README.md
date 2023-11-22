@@ -7,7 +7,7 @@ RaQL Chatbot: Not only retrieve and extract your Knowledge document based on RAG
 
 ## AWS Architect:
 RAG Flow:
-![image](https://github.com/ConstantSun/llm_rag_pythonsql/assets/26327367/09c014e6-5b0f-49e4-9bec-763eb2567754)
+![image](https://github.com/ConstantSun/llm_rag_pythonsql/assets/26327367/685559dc-1477-434a-9274-6b703453e49c)
 
 
 
