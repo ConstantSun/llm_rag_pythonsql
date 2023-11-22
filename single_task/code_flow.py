@@ -1,7 +1,7 @@
 import bedrock
 import single_task.formula as formula
 import single_task.dbtable_info as dbtable_info
-import env
+import random
 from datetime import datetime
 import single_task.convert_db as convert_db
 
@@ -83,12 +83,14 @@ Question: "{question}" """
     print("----end-----------------\n", )
     ################################
     # write that code above to a .py file
-    text_file = open("single_task/auto_generated_python_athena_code.py", "w")
+    # file_name = "auto_generated_python_athena_code" + str(random.randint(0, 1000))
+    file_name = "auto_generated_python_athena_code" 
+    text_file = open(f"single_task/{file_name}.py", "w")
     text_file.write(generated_python_athena_code)
     text_file.close()
 
     # import that file and get the result
-    import single_task.auto_generated_python_athena_code as auto_generated_python_athena_code
+    import single_task.auto_gen.auto_generated_python_athena_code as auto_generated_python_athena_code
     final_code_result = auto_generated_python_athena_code.get_result()
 
     return final_code_result
@@ -97,7 +99,7 @@ Question: "{question}" """
 def test_ask_python_code(question: str):
 
     # import that file and get the result
-    import single_task.auto_generated_python_athena_code as auto_generated_python_athena_code
+    import llm_rag_pythonsql.single_task.auto_gen.auto_generated_python_athena_code as auto_generated_python_athena_code
     final_code_result = auto_generated_python_athena_code.get_result()
 
     return final_code_result

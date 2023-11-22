@@ -1,11 +1,14 @@
 ema = """This is EMA formula: 
-To calculate EMA_today value, you need to calculate EMA yesterday value (EMA_yesterday), e.g: if you want to calculate EMA value for N days, suppose day N is the closest day and day 1 is the furtheast day, you need to calculate EMA value of 1st day, EMA value of 2nd day, EMA value of 3rd day, etc, EMA value of N-th day (this EMA value of N-th day is the target and the result).
-EMA_today = (stock closing price in today - EMA_yesterday) * (2 / (1 + constant N)) + EMA_yesterday
+To calculate EMA value for N days, suppose day N is the most recent day and day 1 is the furtheast day, you need to calculate (N-1) EMA values 
+Firstly, you need to calculate EMA value of the furtheast (Day 1), 
+Sencondly, you need to calculate EMA value of the sencond furtheast (Day 2), 
+etc, EMA value of Day N (this EMA value of Day N is the target and the result).
+
+For each EMA value of Day i, excep Day 1 has EMA value equals to Closing Price, other Day i has EMA value equals to: EMA_today = (stock closing price in today - EMA_yesterday) * (2 / (1 + constant N)) + EMA_yesterday
 Where :
 EMA_today: EMA value today,
 EMA_yesterday: EMA value yesterday,
 N: a constant equals to the total number of days.
-Note: EMA_today value of the furtheast day equals to the furtheast day's closing price.
 """
 
 sma = """This is SMA (Simple Moving Average) formula:
