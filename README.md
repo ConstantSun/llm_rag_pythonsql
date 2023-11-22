@@ -59,8 +59,34 @@ Type your database name and click **Create database** :
 ##### 10. Click Run Crawler:
 <img width="1190" alt="image" src="https://github.com/ConstantSun/llm_rag_pythonsql/assets/26327367/3564c839-d151-467d-b00a-1cd09a871347">
 
-
 You'll see Crawler runs (1), wait a minute to finish crawl process.
 
 ##### 11. Go to Athena and select your database:
 <img width="1390" alt="image" src="https://github.com/ConstantSun/llm_rag_pythonsql/assets/26327367/2409dd95-4c3e-4d92-8b26-85d1f7c5f167">
+
+Check out **Tables and views** : 
+
+<img width="398" alt="image" src="https://github.com/ConstantSun/llm_rag_pythonsql/assets/26327367/3444f592-c089-43a3-bb0b-0ff0d4227ab8">
+
+##### 12. Due to wrong dtyyyymmdd Type, we'll run a query to create new table with correct format as below:
+   
+<img width="713" alt="image" src="https://github.com/ConstantSun/llm_rag_pythonsql/assets/26327367/3d033825-0119-4e06-98af-88008c377494">
+
+Code: 
+```
+CREATE TABLE <your new table name> AS
+SELECT
+  ticker,
+  CAST(CONCAT(
+       SUBSTR(CAST(dtyyyymmdd AS VARCHAR), 1, 4), '-',  
+       SUBSTR(CAST(dtyyyymmdd AS VARCHAR), 5, 2), '-',
+       SUBSTR(CAST(dtyyyymmdd AS VARCHAR), 7, 2)
+  ) AS DATE) AS dtyyyymmdd,
+  open,
+  high,
+  low,
+  close,
+  volume
+FROM <your original table name>;
+```
+Click Run
