@@ -1,8 +1,4 @@
-def func1(x):
-  return x+10
-
-def func2(x):
-  return x+100
-
-func_list = [func1, func2]
-print(func_list[0](5))
+def run():
+  moduleNames = ['single_task.auto_gen.auto_generated_python_athena_code'] 
+  modules = __import__(moduleNames[0])
+  print(modules.get_result())

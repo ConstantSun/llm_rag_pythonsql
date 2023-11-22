@@ -1,13 +1,13 @@
 # from draft import asynctest, multithread
-from single_task import multi_process, rag_flow, code_flow
-import time
+# from single_task import multi_process, rag_flow, code_flow
+# import time
 # import asyncio
-from datetime import datetime
-import question_type
-from single_task import code_flow
-import bedrock
+# from datetime import datetime
+# import question_type
+# from single_task import code_flow
+# import bedrock
 
-t1 = datetime.now()
+# t1 = datetime.now()
 # asyncio.run(asynctest.main())
 # t2 = time.time()
 # print(f'Total time: {t2 - t1:.2f} secs')
@@ -24,19 +24,30 @@ t1 = datetime.now()
 
 
 # Mã ABB có chỉ số RSI là bao nhiêu?
-stock_code = "ABB"
-question = f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?"
-question =  "Mã ABB có chỉ số EMA cho 14 ngày là bao nhiêu?"
+# stock_code = "ABB"
+# question = f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?"
+# question =  "Mã ABB có chỉ số EMA cho 14 ngày là bao nhiêu?"
 
 # percentage = code_flow.ask_python_code(question, t1)
 # print("percentage: ", percentage)
 
-from single_task import multi_thread
-start = time.time()
+# from single_task import multi_thread
+# start = time.time()
 
-list = [[rag_flow.ask_rag, "Mã ABB có chỉ số EMA cho 14 ngày là bao nhiêu?"], [code_flow.ask_python_code, "Mã ABB có chỉ số EMA cho 14 ngày là bao nhiêu?"]]
-res = multi_thread.run_multi_funcs(list)
-print("--__--")
-print(res)
-print(f'Total time: {time.time() - start:.2f} secs')
+# list = [[rag_flow.ask_rag, "Mã ABB có chỉ số EMA cho 14 ngày là bao nhiêu?"], [code_flow.ask_python_code, "Mã ABB có chỉ số EMA cho 14 ngày là bao nhiêu?"]]
+# res = multi_thread.run_multi_funcs(list)
+# print("--__--")
+# print(res)
+# print(f'Total time: {time.time() - start:.2f} secs')
 
+# from draft import draft 
+# draft.run()
+
+
+import importlib
+
+module_path = "single_task.auto_gen.auto_generated_python_athena_code"
+module = importlib.import_module(module_path)
+
+get_result = module.get_result
+print(get_result())

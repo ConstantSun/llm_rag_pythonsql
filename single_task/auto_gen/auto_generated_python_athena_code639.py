@@ -14,15 +14,13 @@ def get_result():
     for i in range(len(closes)-1):
       variations.append(closes[i+1] - closes[i])
     
-    pos_sum = sum(i for i in variations if i > 0)
-    neg_sum = sum(abs(i) for i in variations if i < 0)
+    X = sum([x for x in variations if x > 0]) / 14
+    Y = sum([abs(x) for x in variations if x < 0]) / 14
     
-    if pos_sum == 0:
-      return ["no query result"]
+    rsi = 100 - (100 / (1 + X/Y))
     
-    rsi = 100 - (100 / (1 + pos_sum/neg_sum))
     return [round(rsi, 2)]
-  
+    
   except:
     return ["no query result"]
-
+  

@@ -64,17 +64,6 @@ Question: "{question}" """
     print(f"\n_____@TIME EXECUTED_____SQL Postgres_______: {datetime.now()- start_time}\n\n{genereted_python_code_postgresql}" )
     
     
-    ################################
-    # prompt_template_for_python_athena = f"""Convert the following python code, so that it connects to Amazon Athena database instead of PostgreSQL, using PyAthena library, Amazon Athena table name is the same as table's name in PostgreSQL, the Amazon Athena table has a prefix: "{dbtable_info.dataupcom_db_name}", aws_access_key_id is {env.aws_access_key_id}, aws_secret_access_key is {env.aws_secret_access_key}, s3 bucket is {env.athena_s3_bucket}, region_name is {env.region_name}, return program's result in a function named get_result, the get_result function will return an array of target value(s):
-    # {genereted_python_code_postgresql}
-    # """
-    
-    # def get_generated_python_athena_code():
-    #     return bedrock.llm(prompt_template_for_python_athena)
-    
-    # generated_python_athena_code = get_generated_python_athena_code()
-    # # generated_python_athena_code = strim_code(generated_python_athena_code)
-
     #####################
     generated_python_athena_code = convert_db.postgres_to_athena(genereted_python_code_postgresql)
     generated_python_athena_code = strim_code(generated_python_athena_code)
@@ -83,23 +72,17 @@ Question: "{question}" """
     print("----end-----------------\n", )
     ################################
     # write that code above to a .py file
-    # file_name = "auto_generated_python_athena_code" + str(random.randint(0, 1000))
-    file_name = "auto_generated_python_athena_code" 
-    text_file = open(f"single_task/{file_name}.py", "w")
+    file_name = "auto_generated_python_athena_code" + str(random.randint(0, 1000))
+    text_file = open(f"single_task/auto_gen/{file_name}.py", "w")
     text_file.write(generated_python_athena_code)
     text_file.close()
 
-    # import that file and get the result
-    import single_task.auto_gen.auto_generated_python_athena_code as auto_generated_python_athena_code
+    # import that file module and get the result
+    import importlib
+    module_path = f"single_task.auto_gen.{file_name}"
+    auto_generated_python_athena_code = importlib.import_module(module_path)
     final_code_result = auto_generated_python_athena_code.get_result()
 
     return final_code_result
 
 
-def test_ask_python_code(question: str):
-
-    # import that file and get the result
-    import llm_rag_pythonsql.single_task.auto_gen.auto_generated_python_athena_code as auto_generated_python_athena_code
-    final_code_result = auto_generated_python_athena_code.get_result()
-
-    return final_code_result
