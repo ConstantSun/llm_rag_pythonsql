@@ -83,9 +83,13 @@ def get_answer_type_2(question, start_time):
     # stock_code = "ABB"
     # bank_name = "Ngân hàng TMCP An Bình"
 
-    bank_name = "default val"
+    stock_code, bank_name = None, None
     stock_code, bank_name = multi_thread.run_multi_funcs([ [get_stock_code, question], [get_bank_name, question] ])
-   
+    if stock_code is None or "xin lỗi" in stock_code.lower():
+        return "type 2 processing error, in stock_code detect"
+    if bank_name is None or "xin lỗi" in bank_name.lower():
+        return "type 2 processing error, in bank_name detect"
+
     question_list = [
         [code_flow.ask_python_code, f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?"],
         [rag_flow.ask_rag, f"Trong năm 2022, {bank_name} có các sự kiện quan trọng nào?"],

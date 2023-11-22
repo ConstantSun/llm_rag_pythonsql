@@ -4,7 +4,7 @@
 # Python Built-Ins:
 import os
 from typing import Optional
-
+import env
 # External Dependencies:
 import boto3
 from botocore.config import Config
@@ -89,7 +89,7 @@ os.environ["AWS_DEFAULT_REGION"] = "us-east-1" # TODO: change to your region
 
 boto3_bedrock = get_bedrock_client(
     #assumed_role=os.environ.get("BEDROCK_ASSUME_ROLE", None),
-    region=os.environ.get("AWS_DEFAULT_REGION", None)
+    region=env.region_name
 )
 
 # - create the Anthropic Model
@@ -100,7 +100,6 @@ llm = Bedrock(
 
 
 
-import boto3
 import json
 brt = boto3_bedrock
 
