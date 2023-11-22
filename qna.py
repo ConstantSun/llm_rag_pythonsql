@@ -3,10 +3,10 @@ import question_type
 from datetime import datetime
 
 
-def main():
+def main(user_question):
 
     # user_question = "RSI của mã Chứng khoán DVN trong 14 ngày gần nhất ?"  # ok, need to combine ans
-    user_question = "Chỉ báo của mã ABB dạo này thế nào?" # ok all ---- error 
+    # user_question = "Chỉ báo của mã ABB dạo này thế nào?" # ok all ---- error 
     # user_question = "Công ty chứng khoán của bạn có những dịch vụ gì?"  # ok, need to combine ans
     # user_question = "Cổ phiếu mã JKL có biến động thế nào trong tháng 10?" # ok, need to combine ans ---
     # user_question = "Tôi muốn biết thông tin về mã chứng khoán ABB của Ngân hàng thương mại cổ phần An Bình trong năm 2022? " # ok, need to combine ans ---
@@ -37,8 +37,9 @@ def main():
 
     print(">>>>>>>>>>>>>>>>>>>>>>\nFINAL ANSWER: ", answer)
     print("_____@TIME EXECUTED_____final: ", datetime.now() - start_time)
+    return answer
 
-main()
+# main()
 
 # res = code_flow.test_ask_python_code("RSI của mã Chứng khoán DVN trong 14 ngày gần nhất")
 # print("____res:____")

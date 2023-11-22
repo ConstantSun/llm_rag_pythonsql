@@ -81,7 +81,10 @@ Question: "{question}" """
     import importlib
     module_path = f"single_task.auto_gen.{file_name}"
     auto_generated_python_athena_code = importlib.import_module(module_path)
-    final_code_result = auto_generated_python_athena_code.get_result()
+    try: 
+        final_code_result = auto_generated_python_athena_code.get_result()
+    except:
+        final_code_result = "no query result"
 
     return final_code_result
 
