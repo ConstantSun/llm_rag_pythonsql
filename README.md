@@ -3,7 +3,16 @@
 RaQL Chatbot: Not only retrieve and extract your Knowledge document based on RAG, but also analyze complex data with auto-generated-progamming-code, gain insight into your Database to answer your question ! 
 
 ## App Logic Flow:
-<img width="1414" alt="image" src="https://github.com/ConstantSun/llm_rag_pythonsql/assets/26327367/ad16d7c9-4f87-41f0-a422-d82be94d1efb">
+![image](https://github.com/ConstantSun/llm_rag_pythonsql/assets/26327367/14c01d29-4d3e-48a9-9798-8be224eee188)
+
+## AWS Architect:
+RAG Flow:
+![image](https://github.com/ConstantSun/llm_rag_pythonsql/assets/26327367/09c014e6-5b0f-49e4-9bec-763eb2567754)
+
+
+
+Code Flow:
+![image](https://github.com/ConstantSun/llm_rag_pythonsql/assets/26327367/c1741e4d-5050-4e77-bfe5-d196cb3f229f)
 
 ## How to run:
 #### Prepare env as the same as in https://github.com/ConstantSun/LLM_VNese_RAG , including set up Amz Opensearch, SageMaker endpoint
