@@ -51,12 +51,12 @@ def get_question_type(question: str) -> str:
 
 def get_stock_code(question: str) -> str:
     prompt = f"""Mã cổ phiếu nào được đề cập trong câu hỏi sau, chỉ cần trả lời tên mã, không cần giải thích gì thêm: "{question}" """
-    stock_code = bedrock.llm(prompt)
+    stock_code = bedrock.ask_short(prompt)
     return stock_code.upper()
 
 def get_bank_name(question:str) -> str:
-    prompt = f"""Ngân hàng hay Công ty nào được đề cập trong câu hỏi sau, chỉ cần trả lời tên Ngân hàng hoặc Công ty đó, không cần giải thích gì thêm: "{question}" """
-    name = bedrock.llm(prompt)
+    prompt = f"""Ngân hàng hay Công ty nào được đề cập trong câu hỏi sau, chỉ cần trả lời tên Ngân hàng hoặc Công ty đó, không cần giải thích gì thêm: "{question}" """    
+    name = bedrock.ask_short(prompt)
     return name
 
 def get_answer_type_1(question, start_time):
@@ -65,11 +65,6 @@ def get_answer_type_1(question, start_time):
     '''
     stock_code = get_stock_code(question)
 
-    # TODO: Run 3 instructions in parallel:
-    # rsi = code_flow.ask_python_code(f"Chỉ số RSI của mã {stock_code} là gì?")
-    # sma = code_flow.ask_python_code(f"Chỉ số SMA của mã {stock_code} cho 14 ngày là gì?")
-    # ema = code_flow.ask_python_code(f"Chỉ số EMA của mã {stock_code} cho 14 ngày là gì?")
-    
     question_list = [[code_flow.ask_python_code, f"Chỉ số RSI của mã {stock_code} là gì?"], 
                      [code_flow.ask_python_code, f"Chỉ số SMA của mã {stock_code} là gì?"],
                      [code_flow.ask_python_code, f"Chỉ số EMA của mã {stock_code} cho 14 ngày là gì?"]]
@@ -88,16 +83,9 @@ def get_answer_type_2(question, start_time):
     # stock_code = "ABB"
     # bank_name = "Ngân hàng TMCP An Bình"
 
-    # TODO: Run 2 instructions in parallel:
-    # stock_code = get_stock_code(question)
-    # bank_name = get_bank_name(question)
     bank_name = "default val"
     stock_code, bank_name = multi_thread.run_multi_funcs([ [get_stock_code, question], [get_bank_name, question] ])
-    
-    # TODO: Run 3 instructions in parallel:
-    # percentage = code_flow.ask_python_code(f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?")
-    # rag_answer_1 = rag_flow.ask_rag(f"Chỉ xét trong năm 2022, không xét các năm khác, {bank_name} có các sự kiện quan trọng nào?")
-    # rag_answer_2 = rag_flow.ask_rag(f"Trong năm 2022, {bank_name} đạt được những giải thưởng gì ?")
+   
     question_list = [
         [code_flow.ask_python_code, f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?"],
         [rag_flow.ask_rag, f"Trong năm 2022, {bank_name} có các sự kiện quan trọng nào?"],
@@ -116,12 +104,6 @@ Trong năm 2022, {bank_name} cũng có các sự kiện quan trọng sau: \n{rag
 
 
 def get_answer_type_0(question, start_time):
-    # TODO: Run 2 instructions in parallel:
-    # rag_answer = rag_flow.ask_rag(question)
-    # print(f"_____@TIME EXECUTED_____RAG ANSWER______: {datetime.now() - start_time} \n", rag_answer)
-    # code_answer = code_flow.ask_python_code(question)
-    # print(f"_____@TIME EXECUTED_____CODE ANSWER_____: {datetime.now() - start_time} \n", code_answer)
-
     rag_answer, code_answer = multi_thread.run_multi_funcs([[rag_flow.ask_rag, question], 
                                                             [code_flow.ask_python_code, question]])
     if len(code_answer) == 0 or code_answer[0] == "no query result":
