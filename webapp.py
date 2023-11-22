@@ -118,6 +118,8 @@ with st.expander("Conversation", expanded=True):
         download_str.append(st.session_state["past"][i])
         download_str.append(st.session_state["generated"][i])
     
-    download_str = '\n'.join(download_str)
+    # download_str = '\n'.join(download_str)
+    download_str = [x for x in download_str if x is not None] 
+    download_str = '\n'.join(download_str)    
     if download_str:
         st.download_button('Download', download_str)

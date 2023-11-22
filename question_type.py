@@ -91,9 +91,8 @@ def get_answer_type_2(question, start_time):
     # TODO: Run 2 instructions in parallel:
     # stock_code = get_stock_code(question)
     # bank_name = get_bank_name(question)
-
+    bank_name = "default val"
     stock_code, bank_name = multi_thread.run_multi_funcs([ [get_stock_code, question], [get_bank_name, question] ])
-
     
     # TODO: Run 3 instructions in parallel:
     # percentage = code_flow.ask_python_code(f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?")

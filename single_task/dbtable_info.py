@@ -10,4 +10,5 @@ Columns:
 "low": double, description: stock lowest price
 "close": double, description: stock closing price
 "volume": bigint, description: trading volume
-Note: dtyyyymmdd has Date type, therefore DO NOT compare date BETWEEN varchar() and varchar()"""
+Note: dtyyyymmdd has Date type, if compare dtyyyymmdd BETWEEN varchar() and varchar(), remember to add date before varchar() time string,
+e.g: WHERE dtyyyymmdd BETWEEN date '2021-01-01' AND date '2021-01-31' """
