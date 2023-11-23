@@ -21,30 +21,55 @@ Biết rằng:
 - Nếu hỏi dạng mẫu câu hỏi số 1, có nghĩa là muốn hỏi thông tin chung chung chỉ báo của mã <tên mã> trong thời gian gần đây (hay dạo này), và không hỏi cụ thể chỉ báo nào. Nếu hỏi cụ thể về một chỉ báo <tên chỉ báo> thì câu hỏi đó sẽ không thuộc mẫu câu hỏi số 1. Nếu hỏi cụ thể về thời gian, ví dụ : trong năm 2022, trong tháng 1, trong ngày 3 tháng 5, vân vân, thì câu hỏi sẽ không thuộc mẫu câu hỏi số 1.
 - Nếu hỏi dạng mẫu câu hỏi số 2, có nghĩa là muốn hỏi thông tin chung về mã chứng khoán tên là <tên mã> trong thời gian là năm 2022. Nếu hỏi cụ thể về một hay nhiều thông tin nào đó của mã chứng khoán <tên mã> thì câu hỏi đó sẽ không thuộc mẫu câu hỏi số 2. Nếu hỏi vào thời gian khác năm 2022, ví dụ: hỏi năm 2021, hay năm 2020, vân vân, thì câu hỏi không thuộc mẫu câu hỏi số 2.
 
-Đây là câu hỏi bạn cần trả lời dựa trên các thông tin ở trên: 
-Câu hỏi: {question}
-Trả lời: Bạn hãy giải thích câu trả lởi và "Kết luận" theo mẫu : 1 nếu Thuộc mẫu câu hỏi số 1, 2 nếu Thuộc mẫu câu hỏi số 2, 0 nếu Không thuộc mẫu câu nào"""
+Một vài ví dụ như sau:
 
+Câu hỏi sau đây thuộc loại nào?
+Chỉ báo của mã ABC dạo này thế nào?
+Trả lời: 1
+
+Câu hỏi sau đây thuộc loại nào?
+Thông tin về mã chứng khoán XYZ trong năm 2020?
+Trả lời: 2
+
+Câu hỏi sau đây thuộc loại nào?
+Thời tiết hôm nay thế nào?
+Trả lời: 0
+
+Không giải thích, không nói thêm những câu "Dựa trên thông tin cung cấp" hay tương tự.
+Chỉ trả về số tương ứng loại câu hỏi, không giải thích thêm thông tin gì khác, trả lời ngắn gọn nhất có thể.
+Câu hỏi sau đây thuộc loại nào? 
+{question}
+Trả lời:"""
+
+def get_answer_from_line(line: str):
+    if "không thuộc" in line or "0" in line:
+        return "0"
+    elif "1" in line:
+        return "1"
+    elif "2" in line:
+        return "2"
+    else:
+        print("inline: unknow question type")
+        return "unknown"
 
 def get_question_type(question: str) -> str:
     '''
     Return question type: 0,1,2 or unknown.
     '''
     prompt = get_classify_question_type_prompt(question)
-    answer = bedrock.ask_direct(prompt)
+    answer = bedrock.ask_direct(prompt, max_tokens_to_sample=150)
     print("get_question_type answer:\n", answer)
-    for line in answer.splitlines():
+
+    lines = answer.splitlines()
+
+    # Get direct answer if the answer is short
+    if len(lines) == 1:
+        return get_answer_from_line(lines[0])
+    # Else try to get long answer
+    for line in lines:
         line = line.lower()
-        if "kết luận" in line[:10]:
-            if "không thuộc" in line or "0" in line:
-                return "0"
-            elif "1" in line:
-                return "1"
-            elif "2" in line:
-                return "2"
-            else:
-                print("inline: unknow question type")
-                return "unknown"
+        if "trả lời" in line[:10]:
+            return get_answer_from_line(line)
     print("overall: unknown question type")
     return "unknown"
 
