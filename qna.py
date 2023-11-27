@@ -4,7 +4,7 @@ import question_type
 from datetime import datetime
 from types import FunctionType  
 
-def main(user_question: str, streaming_callback: FunctionType):
+def main(user_question: str):
 
     # user_question = "RSI của mã Chứng khoán DVN trong 14 ngày gần nhất ?"  # ok, need to combine ans
     # user_question = "Chỉ báo của mã ABB dạo này thế nào?" # ok all ---- error 
@@ -16,7 +16,7 @@ def main(user_question: str, streaming_callback: FunctionType):
     start_time = datetime.now()
 
     # user_qstn_type = question_type.get_question_type(user_question)
-    user_qstn_type = "0"
+    user_qstn_type = "2"
 
     print("_____@TIME EXECUTED_____user_qstn_type: ", datetime.now() - start_time)
     if user_qstn_type == "unknown":
