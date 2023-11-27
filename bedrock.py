@@ -110,12 +110,17 @@ import json
 brt = boto3_bedrock
 
 
-def ask_direct(question: str) -> str:
+def ask_direct(
+    question: str, 
+    max_tokens_to_sample: int = 900, 
+    temperature: float = 0,
+    top_p: float = 0.1
+) -> str:
     body = json.dumps({
         "prompt": f"\n\nHuman: {question}\n\nAssistant:",
-        "max_tokens_to_sample": 900,
-        "temperature": 0,
-        "top_p": 0.1,
+        "max_tokens_to_sample": max_tokens_to_sample,
+        "temperature": temperature,
+        "top_p": top_p,
     })
 
     modelId = 'anthropic.claude-v2'

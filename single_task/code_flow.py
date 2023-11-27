@@ -89,6 +89,6 @@ Question: "{question}" """
     except:
         final_code_result = "no query result"
     
-    result = answer_template.replace("answer_template_holder", str(final_code_result[0]))
+    result = answer_template.replace("answer_template_holder", ' ,'.join(map(str,final_code_result)))
     streamlit.text(result)
     return final_code_result
