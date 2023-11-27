@@ -1,10 +1,10 @@
 import single_task.code_flow as code_flow
-import single_task.rag_flow as rag_flow
 import question_type
 from datetime import datetime
-from types import FunctionType  
+from bedrock import api_management_client, connection_id
+import json
 
-def main(user_question: str, streaming_callback: FunctionType):
+def main(user_question):
 
     # user_question = "RSI của mã Chứng khoán DVN trong 14 ngày gần nhất ?"  # ok, need to combine ans
     # user_question = "Chỉ báo của mã ABB dạo này thế nào?" # ok all ---- error 
@@ -14,9 +14,7 @@ def main(user_question: str, streaming_callback: FunctionType):
     # user_question = "Cho tôi thông tin chỉ báo AD của mã VCB?"
 
     start_time = datetime.now()
-
-    # user_qstn_type = question_type.get_question_type(user_question)
-    user_qstn_type = 0
+    user_qstn_type = question_type.get_question_type(user_question)
     print("_____@TIME EXECUTED_____user_qstn_type: ", datetime.now() - start_time)
     if user_qstn_type == "unknown":
         print("unknow user question type")
@@ -28,18 +26,20 @@ def main(user_question: str, streaming_callback: FunctionType):
     if user_qstn_type == "1":
         answer = question_type.get_answer_type_1(user_question, start_time)
     elif user_qstn_type == "2":
-        answer = question_type.get_answer_type_2(user_question, streaming_callback, start_time)
+        answer = question_type.get_answer_type_2(user_question, start_time)
     else:
-        answer = question_type.get_answer_type_0(user_question, streaming_callback, start_time)
+        answer = question_type.get_answer_type_0(user_question, start_time)
 
     
     # res = code_flow.test_ask_python_code("Chỉ số EMA cho 14 ngày của mã ABB là gì ?")
     # res = code_flow.test_ask_python_code("RSI của mã Chứng khoán DVN trong 14 ngày gần nhất")
     # res = code_flow.ask_python_code("Chỉ số SMA cho 14 ngày của mã ABB ")
     # res = code_flow.ask_python_code("Cho tôi thông tin chỉ báo AD của mã VCB?")
-
-    # answer = rag_flow.ask_streaming_rag(streaming_callback, user_question)
-
+    
+    # End streaming...
+    api_management_client.post_to_connection(
+        Data=json.dumps({"action": "end"}).encode("utf-8"), ConnectionId=connection_id
+    )
     print(">>>>>>>>>>>>>>>>>>>>>>\nFINAL ANSWER: ", answer)
     print("_____@TIME EXECUTED_____final: ", datetime.now() - start_time)
     return answer

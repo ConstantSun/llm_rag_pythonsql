@@ -12,7 +12,9 @@ from botocore.credentials import Credentials
 import json
 from typing import Dict, List
 
-from bedrock import llm
+from bedrock import get_llm_stream
+from types import FunctionType
+
 
 class ContentHandler(EmbeddingsContentHandler):
     content_type = "application/json"
@@ -48,11 +50,17 @@ class ContentHandler(EmbeddingsContentHandler):
         return response_json["vectors"]
 
 
-def ask_rag(query: str)-> str:
+def ask_streaming_rag(streaming_callback: FunctionType, query: str)-> str:
     '''
-    Param: query, str.
+    Param: 
+        streaming_callback: FunctionType
+        query: str
+
     Return: Answer for query, str.
     '''
+
+    print(".......................ASK STREAMING RAG: ", query)
+
     content_handler = ContentHandler()
     infloatbase_batch_embeddings = SagemakerEndpointEmbeddings(
         # credentials_profile_name="credentials-profile-name",
@@ -72,7 +80,7 @@ def ask_rag(query: str)-> str:
     # Call the assume_role method of the STSConnection object and pass the role
     # ARN and a role session name.
     assumed_role_object=sts_client.assume_role(
-        RoleArn="arn:aws:iam::628152409662:role/ec2-oregon-role",
+        RoleArn="arn:aws:iam::628152409662:role/ec2-oregon-role",  # TODO: change to your own role.
         RoleSessionName="AssumeRoleSession1"
     )
     credentials=assumed_role_object['Credentials']
@@ -99,13 +107,16 @@ def ask_rag(query: str)-> str:
 
     # RetrievalQAWithSourcesChain(llm=llm, )
     # qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever())
-    # query = "Thật là kì lạ!"
-    qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever(search_kwargs={'k': 5}),return_source_documents=False)
+    qa = RetrievalQA.from_chain_type(llm=get_llm_stream(streaming_callback), 
+                                     chain_type="stuff", 
+                                     retriever=docsearch.as_retriever(search_kwargs={'k': 5}),
+                                     return_source_documents=False)
     print("---- RAG Query 1---- in file: ", query)
-    answer = qa.run(query)
+    # answer = qa.run(query)
 
     # TODO: Rewrite code to answer question from AOS, LLM -> answer 404: can not answer if can't, else answer: 200: answer
     # print("---- RAG Query 1 1---- in file: ", query)
-    print("---- RAG Answer---- in file: ")
-    print(query, "\n-\n", answer)
-    return answer
+    # print("---- RAG Answer---- in file: ")
+    # print(query, "\n-\n", answer)
+    return qa.run(query)
+

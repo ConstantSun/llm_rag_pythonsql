@@ -65,9 +65,9 @@ def get_answer_type_1(question, start_time):
     '''
     stock_code = get_stock_code(question)
 
-    question_list = [[code_flow.ask_python_code, f"Chỉ số RSI của mã {stock_code} là gì?"], 
-                     [code_flow.ask_python_code, f"Chỉ số SMA của mã {stock_code} là gì?"],
-                     [code_flow.ask_python_code, f"Chỉ số EMA của mã {stock_code} cho 14 ngày là gì?"]]
+    question_list = [[code_flow.ask_python_code, (f"Chỉ số RSI của mã {stock_code} là gì?")], 
+                     [code_flow.ask_python_code,( f"Chỉ số SMA của mã {stock_code} là gì?")],
+                     [code_flow.ask_python_code,( f"Chỉ số EMA của mã {stock_code} cho 14 ngày là gì?")]]
     rsi, sma, ema = multi_thread.run_multi_funcs(question_list)
 
     ans = f"""Dựa trên dữ liệu gần nhất cho mã chứng khoán {stock_code}:
@@ -76,7 +76,7 @@ def get_answer_type_1(question, start_time):
 - Chỉ số EMA cho 14 ngày là {ema[0]}."""
     return ans
 
-def get_answer_type_2(question, start_time):
+def get_answer_type_2(question, streaming_callback, start_time):
     '''
     Thông tin về mã chứng khoán <tên mã> trong năm 2022?
     '''
@@ -91,9 +91,9 @@ def get_answer_type_2(question, start_time):
         return "type 2 processing error, in bank_name detect"
 
     question_list = [
-        [code_flow.ask_python_code, f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?"],
-        [rag_flow.ask_rag, f"Trong năm 2022, {bank_name} có các sự kiện quan trọng nào?"],
-        [rag_flow.ask_rag, f"Trong năm 2022, {bank_name} đạt được những giải thưởng gì ?"]
+        [code_flow.ask_python_code, (f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?")],
+        [rag_flow.ask_streaming_rag, (streaming_callback ,f"Trong năm 2022, {bank_name} có các sự kiện quan trọng nào?")],
+        [rag_flow.ask_streaming_rag, (streaming_callback ,f"Trong năm 2022, {bank_name} đạt được những giải thưởng gì ?")]
     ]
     percentage, rag_answer_1, rag_answer_2 = multi_thread.run_multi_funcs(question_list)
     print("percentage:", percentage)
@@ -107,9 +107,10 @@ Trong năm 2022, {bank_name} cũng có các sự kiện quan trọng sau: \n{rag
     return ans
 
 
-def get_answer_type_0(question, start_time):
-    rag_answer, code_answer = multi_thread.run_multi_funcs([[rag_flow.ask_rag, question], 
-                                                            [code_flow.ask_python_code, question]])
+def get_answer_type_0(question, streaming_callback, start_time):
+    rag_answer, code_answer = multi_thread.run_multi_funcs([ [rag_flow.ask_streaming_rag, (streaming_callback, question)] , 
+                                                             [code_flow.ask_python_code, ((question,)) ]
+                                                           ])
     if len(code_answer) == 0 or code_answer[0] == "no query result":
         if "xin lỗi" in (rag_answer.lower()):
             return "Hiện tại chưa có thông tin về mã chứng khoán của quý khách. Vui lòng xem thêm tại đường link sau: https://itrade.abs.vn/"

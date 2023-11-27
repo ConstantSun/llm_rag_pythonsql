@@ -8,7 +8,7 @@ import env
 # External Dependencies:
 import boto3
 from botocore.config import Config
-from types import FunctionType  
+
 
 def get_bedrock_client(
     assumed_role: Optional[str] = None,
@@ -82,8 +82,8 @@ def get_bedrock_client(
 
 from langchain.llms.bedrock import Bedrock
 from langchain.load.dump import dumps
-
-
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+from botocore.exceptions import ClientError
 
 os.environ["AWS_DEFAULT_REGION"] = "us-east-1" # TODO: change to your region
 
@@ -93,17 +93,55 @@ boto3_bedrock = get_bedrock_client(
 )
 
 
-# - create the Anthropic Model
-def get_llm_stream(streaming_callback: FunctionType):
-    return Bedrock(
-        model_id="anthropic.claude-v2", 
-        client=boto3_bedrock, 
-        streaming=True,
-        callbacks=[streaming_callback],
-        model_kwargs={"max_tokens_to_sample": 900, "temperature": 0, "top_k": 30, "top_p": 0.1 }
+
+def get_socket_client(event, aws_region):
+    api_id = event.get("requestContext", {}).get("apiId")
+    stage = event.get("requestContext", {}).get("stage")
+    connection_id = event.get("requestContext", {}).get("connectionId")
+    api_management_client = boto3.client(
+        "apigatewaymanagementapi", endpoint_url=f"https://{api_id}.execute-api.{aws_region}.amazonaws.com/{stage}"
     )
 
+    return api_management_client, connection_id
 
+class WebsocketStreamingCallbackHandler(StreamingStdOutCallbackHandler):
+    def __init__(self, client, connection_id):
+        self.socket_client = client
+        self.connection_id = connection_id
+
+    def on_llm_new_token(self, token: str, **kwargs: Any) -> None:
+        # print(token, end="", flush=True)
+
+        try:
+            self.socket_client.post_to_connection(
+                Data=json.dumps({
+                    "action": "typing",
+                    "content": token
+                }).encode("utf-8"),
+                ConnectionId=self.connection_id
+            )
+        except ClientError:
+            print("Couldn't post to connection %s.", self.connection_id)
+        except self.socket_client.exceptions.GoneException:
+            print("Connection %s is gone, removing.", self.connection_id)
+
+api_management_client, connection_id = get_socket_client(event=None, aws_region = env.region_name)
+stream_handler = WebsocketStreamingCallbackHandler(api_management_client, connection_id)
+
+# - create the Anthropic Model
+llm = Bedrock(
+    model_id="anthropic.claude-v2", 
+    client=boto3_bedrock, 
+    model_kwargs={"max_tokens_to_sample": 900, "temperature": 0, "top_k": 30, "top_p": 0.1,},
+    callbacks=[stream_handler] ,
+    streaming=True,
+)
+
+# Processing RAG...
+# End streaming...
+api_management_client.post_to_connection(
+    Data=json.dumps({"action": "end"}).encode("utf-8"), ConnectionId=connection_id
+)
 
 
 import json

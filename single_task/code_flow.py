@@ -30,6 +30,8 @@ def ask_python_code(question: str):
     Step 2: Convert to python code, might connect to AMZ Athena
     Step 3: Execute step 2's code, return result
     """
+    print(".......ASK PYTHON CODE: ", question)
+    print(type(question))
     start_time = datetime.now()
     formula_note = formula.ema + "\n\n" + formula.sma + "\n\n" + formula.rsi_2
     db_info = dbtable_info.dataupcom
