@@ -20,7 +20,7 @@ Code Flow:
 #### Then run:
 ```
 $ pip install -r requirements.txt
-$ python3 qna.py
+$ streamlit run webapp.py
 ```
 
 #### Prepare Amazon Athena Database as following:

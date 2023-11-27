@@ -4,6 +4,7 @@ import single_task.dbtable_info as dbtable_info
 import random
 from datetime import datetime
 import single_task.convert_db as convert_db
+import streamlit
 
 def strim_code(raw_answer: str):
     strim_ans = ""
@@ -20,7 +21,7 @@ def strim_code(raw_answer: str):
     return strim_ans
 
 
-def ask_python_code(question: str):
+def ask_python_code(question: str, answer_template: str):
     """
     Param: question : str
     Return: Result value
@@ -87,7 +88,7 @@ Question: "{question}" """
         final_code_result = auto_generated_python_athena_code.get_result()
     except:
         final_code_result = "no query result"
-
+    
+    result = answer_template.replace("answer_template_holder", str(final_code_result[0]))
+    streamlit.text(result)
     return final_code_result
-
-

@@ -4,6 +4,9 @@ import bedrock
 from datetime import datetime
 from single_task import multi_thread
 
+from langchain.callbacks import StreamlitCallbackHandler
+import streamlit as st
+
 # Classifiy question type, currently there are 3 types: Type 1, Type 2, Type 0(other type)
 # Answer question corresponding to the question type.
 
@@ -65,9 +68,9 @@ def get_answer_type_1(question, start_time):
     '''
     stock_code = get_stock_code(question)
 
-    question_list = [[code_flow.ask_python_code, (f"Chỉ số RSI của mã {stock_code} là gì?")], 
-                     [code_flow.ask_python_code,( f"Chỉ số SMA của mã {stock_code} là gì?")],
-                     [code_flow.ask_python_code,( f"Chỉ số EMA của mã {stock_code} cho 14 ngày là gì?")]]
+    question_list = [[code_flow.ask_python_code, (f"Chỉ số RSI của mã {stock_code} là gì?", f"Chỉ số RSI của mã {stock_code} là : answer_template_holder")], 
+                     [code_flow.ask_python_code,( f"Chỉ số SMA của mã {stock_code} là gì?", f"Chỉ số SMA của mã {stock_code} cho 14 ngày là : answer_template_holder")],
+                     [code_flow.ask_python_code,( f"Chỉ số EMA của mã {stock_code} cho 14 ngày là gì?", f"Chỉ số EMA của mã {stock_code} cho 14 ngày là : answer_template_holder")]]
     rsi, sma, ema = multi_thread.run_multi_funcs(question_list)
 
     ans = f"""Dựa trên dữ liệu gần nhất cho mã chứng khoán {stock_code}:
@@ -76,7 +79,7 @@ def get_answer_type_1(question, start_time):
 - Chỉ số EMA cho 14 ngày là {ema[0]}."""
     return ans
 
-def get_answer_type_2(question, streaming_callback, start_time):
+def get_answer_type_2(question, start_time):
     '''
     Thông tin về mã chứng khoán <tên mã> trong năm 2022?
     '''
@@ -84,35 +87,46 @@ def get_answer_type_2(question, streaming_callback, start_time):
     # bank_name = "Ngân hàng TMCP An Bình"
 
     stock_code, bank_name = None, None
-    stock_code, bank_name = multi_thread.run_multi_funcs([ [get_stock_code, question], [get_bank_name, question] ])
+    stock_code, bank_name = multi_thread.run_multi_funcs([ [get_stock_code, (question,)], [get_bank_name, (question,)] ])
     if stock_code is None or "xin lỗi" in stock_code.lower():
         return "type 2 processing error, in stock_code detect"
     if bank_name is None or "xin lỗi" in bank_name.lower():
         return "type 2 processing error, in bank_name detect"
 
+
+    st_callback_1 = StreamlitCallbackHandler(st.container())
+    st_callback_2 = StreamlitCallbackHandler(st.container())
+
     question_list = [
-        [code_flow.ask_python_code, (f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?")],
-        [rag_flow.ask_streaming_rag, (streaming_callback ,f"Trong năm 2022, {bank_name} có các sự kiện quan trọng nào?")],
-        [rag_flow.ask_streaming_rag, (streaming_callback ,f"Trong năm 2022, {bank_name} đạt được những giải thưởng gì ?")]
+        [code_flow.ask_python_code, (f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?",
+                                     f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn answer_template_holder phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ")],
+        [rag_flow.ask_streaming_rag, (st_callback_1 ,f"Trong năm 2022, {bank_name} có các sự kiện quan trọng nào?")],
+        [rag_flow.ask_streaming_rag, (st_callback_2 ,f"Trong năm 2022, {bank_name} đạt được những giải thưởng gì ?")]
     ]
+
     percentage, rag_answer_1, rag_answer_2 = multi_thread.run_multi_funcs(question_list)
     print("percentage:", percentage)
     print("rag_answer_1:", rag_answer_1)
     print("rag_answer_2:", rag_answer_2)
     print("<3 "*60)
-    ans = f"""Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn {percentage} phần trăm so với năm 2021.
-Trong năm 2022, {bank_name} cũng có các sự kiện quan trọng sau: \n{rag_answer_1}
+#     ans = f"""Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn {percentage} phần trăm so với năm 2021.
+# Trong năm 2022, {bank_name} cũng có các sự kiện quan trọng sau: \n{rag_answer_1}
 
-Đồng thời cũng trong năm 2022, Ngân hàng TMCP An Bình đạt được những giải thưởng sau:\n{rag_answer_2}"""
+# Đồng thời cũng trong năm 2022, Ngân hàng TMCP An Bình đạt được những giải thưởng sau:\n{rag_answer_2}"""
+
+    ans = f"""Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn {percentage} phần trăm so với năm 2021."""
     return ans
 
 
-def get_answer_type_0(question, streaming_callback, start_time):
-    rag_answer, code_answer = multi_thread.run_multi_funcs([ [rag_flow.ask_streaming_rag, (streaming_callback, question)] , 
-                                                             [code_flow.ask_python_code, ((question,)) ]
+def get_answer_type_0(question, start_time):
+    st_callback = StreamlitCallbackHandler(st.container())
+    rag_answer, code_answer = multi_thread.run_multi_funcs([ [rag_flow.ask_streaming_rag, (st_callback, question)] , 
+                                                             [code_flow.ask_python_code, ((question, question + " : answer_template_holder")) ]
                                                            ])
-    if len(code_answer) == 0 or code_answer[0] == "no query result":
+    if len(code_answer) == 0 or code_answer[0] == "no query result" or str(code_answer) == "0" or str(code_answer) == "[0]":
         if "xin lỗi" in (rag_answer.lower()):
-            return "Hiện tại chưa có thông tin về mã chứng khoán của quý khách. Vui lòng xem thêm tại đường link sau: https://itrade.abs.vn/"
+            res = "Hiện tại chưa có thông tin về mã chứng khoán của quý khách. Vui lòng xem thêm tại đường link sau: https://itrade.abs.vn/"
+            st.text(res)
+            return res
     return "rag_answer:\n" + rag_answer + "\n--------\n" + "code_answer:\n" + ' '.join(str(e) for e in code_answer) 
 
