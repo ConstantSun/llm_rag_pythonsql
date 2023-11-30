@@ -37,8 +37,20 @@ def ask_python_code(question: str, answer_template: str):
     formula_note = formula.ema + "\n\n" + formula.sma + "\n\n" + formula.rsi_2
     db_info = dbtable_info.dataupcom
 
-    prompt_template_for_python_postgre = f"""You are an expert in Stock Market and you are also a SQL expert and Python expert, and you work as both a Data Analysis and a Developer for a Securities Company.
-Given an input question, create a syntactically correct python program, this program might use SQL query to run in Postgresql database using psycopg2 and pandas.read_sql. Unless the user specifies in the question a specific number of examples to obtain, query for at most 10 results using the LIMIT clause as per SQL. You can order the results to return the most informative data in the database.
+    prompt_template_for_python_postgre = f"""You are both SQL expert and Python expert, and you work as both a Data Analysis and a Developer for a Securities Company.
+Given an input question, create a syntactically correct python program, this program must use SQL query to run in Postgresql database using psycopg2 and pandas.read_sql.
+Pay attention to use only the column names you can see in the tables below. Be careful to not query for columns that do not exist. 
+If the question does not require to query the PostgreSQL database, do not make up answer, answer with this format: 
+<answer>
+<code>
+```python 
+def get_result():
+    return "Không thể trả lời câu hỏi do không có thông tin từ cơ sở dữ liệu" 
+```
+</code>
+</answer>
+
+Unless the user specifies in the question a specific number of examples to obtain, query for at most 10 results using the LIMIT clause as per SQL. You can order the results to return the most informative data in the database.
 When comparing ticker in SQL, use LIKE, LOWER() for both operands, do not use "=", e.g: To check if ticker equals to "Xyz", then use: LOWER(ticker) LIKE LOWER('%Xyz%').
 
 Only use the following formulas if the question mentions any of them, do not use your knowledge to create any formula if it is not mentioned below:
@@ -47,14 +59,17 @@ Only use the following formulas if the question mentions any of them, do not use
 Only use the following database with tables:
 {db_info}
 
-Return program's result in a function named get_result, the get_result function will return an array of target value(s), do not use print() function, start the python code with the line: 
+Return program's result in a function named get_result, the get_result function will return a string that answer the question with corresponding values.
+Do not use print() function, python code format:  
+<answer>
+<code>
 ```python
-and end the python code with the line:
+<handle error> handle exception by returning "no query result" when SQL query does not return any value.</handle error> 
 ```
-and handle exception by returning "no query result" when SQL query does not return any value.
-
+</code>
+</answer>
 If the Question wants to know any values, carefully check those formulas above, do not use your own formula to answer the Question and answer "not found formula" if you can not find the formula.
-Question: "{question}" """
+<question>{question}</question>"""
     ################################
 
     print("prompt_template_for_python_postgre: \n", prompt_template_for_python_postgre)

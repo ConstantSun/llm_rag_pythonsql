@@ -2,6 +2,7 @@ dataupcom_db_name = "absdb" # TODO: change this to your own database name, note 
 table_name = "v3"  # TODO: change this to your own table name, note : DO NOT USE characters other than a-z, A-Z, 0-9.
 dataupcom = f"""Database name: {dataupcom_db_name}
 Table name: {table_name}
+<table>
 Columns:
 "ticker": string, description: Ticker symbol or Stock symbol
 "dtyyyymmdd": date type, description: date type
@@ -11,4 +12,5 @@ Columns:
 "close": double, description: stock closing price
 "volume": bigint, description: trading volume
 Note: dtyyyymmdd has Date type, if compare dtyyyymmdd BETWEEN varchar() and varchar(), remember to add date before varchar() time string,
-e.g: WHERE dtyyyymmdd BETWEEN date '2021-01-01' AND date '2021-01-31' """
+e.g: WHERE dtyyyymmdd BETWEEN date '2021-01-01' AND date '2021-01-31' 
+</table>"""

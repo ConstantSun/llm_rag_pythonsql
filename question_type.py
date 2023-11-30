@@ -205,8 +205,8 @@ def get_answer_type_0(question, start_time):
     rag_answer, code_answer = multi_thread.run_multi_funcs([ [rag_flow.ask_streaming_rag, (st_callback, question)] , 
                                                              [code_flow.ask_python_code, ( question, question + " : answer_template_holder" ) ]
                                                            ])
-    if len(code_answer) == 0 or code_answer[0] == "no query result" or str(code_answer) == "0" or str(code_answer) == "[0]":
-        if "xin lỗi" in (rag_answer.lower()):
+    if len(code_answer) == 0 or code_answer[0] == "no query result" or str(code_answer) == "0" or str(code_answer) == "[0]" :
+        if "Đang xử lý ..." in rag_answer:
             res = "Hiện tại chưa có thông tin về mã chứng khoán của quý khách. Vui lòng xem thêm tại đường link sau: https://itrade.abs.vn/"
             st.text(res)
             return res

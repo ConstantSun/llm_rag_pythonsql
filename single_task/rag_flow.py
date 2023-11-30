@@ -50,6 +50,8 @@ class ContentHandler(EmbeddingsContentHandler):
         return response_json["vectors"]
 
 
+additional_promt = """\n<Note> Nếu như bạn không biết câu trả lời, hãy trả lời: "Đang xử lý ...", không bịa ra câu trả lời, chỉ trả lời bằng tiếng Việt Nam.  </Note>\n"""
+
 def ask_streaming_rag(streaming_callback: FunctionType, query: str)-> str:
     '''
     Param: 
@@ -118,5 +120,5 @@ def ask_streaming_rag(streaming_callback: FunctionType, query: str)-> str:
     # print("---- RAG Query 1 1---- in file: ", query)
     # print("---- RAG Answer---- in file: ")
     # print(query, "\n-\n", answer)
-    return qa.run(query)
+    return qa.run(query+additional_promt)
 

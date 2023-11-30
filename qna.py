@@ -16,7 +16,7 @@ def main(user_question: str):
     start_time = datetime.now()
 
     # user_qstn_type = question_type.get_question_type(user_question)
-    user_qstn_type = "2"
+    user_qstn_type = "0"
 
     print("_____@TIME EXECUTED_____user_qstn_type: ", datetime.now() - start_time)
     if user_qstn_type == "unknown":

@@ -1,26 +1,51 @@
 import pyathena
 import pandas as pd
 
+
 def get_result():
     try:
         conn = pyathena.connect(aws_access_key_id=None, aws_secret_access_key=None, s3_staging_dir='s3://abst-test-athena-log/', region_name='us-east-1')
         cursor = conn.cursor()
         
-        # Lấy giá đóng cửa trung bình năm 2021
-        query = """SELECT AVG(close) AS avg_close_2021 FROM absdb.v3 
-                  WHERE LOWER(ticker) LIKE LOWER('%ABB%') AND dtyyyymmdd BETWEEN date '2021-01-01' AND date '2021-12-31'"""
-        df_2021 = pd.read_sql(query, conn)
+        # Get the most recent 14 closing prices for TOP stock
+        query = """SELECT close 
+                FROM absdb.v3
+                WHERE LOWER(ticker) LIKE LOWER('%TOP%')
+                ORDER BY dtyyyymmdd DESC
+                LIMIT 14"""
+                
+        cursor.execute(query)
+        prices = cursor.fetchall()
+        closes = [price[0] for price in prices]
         
-        # Lấy giá đóng cửa trung bình năm 2022
-        query = """SELECT AVG(close) AS avg_close_2022 FROM absdb.v3 
-                  WHERE LOWER(ticker) LIKE LOWER('%ABB%') AND dtyyyymmdd BETWEEN date '2022-01-01' AND date '2022-12-31'"""
-        df_2022 = pd.read_sql(query, conn)
+        # Calculate SMA
+        sma = sum(closes) / len(closes)
         
-        # Tính phần trăm tăng giảm
-        increase_percent = (df_2022.iloc[0,0] - df_2021.iloc[0,0]) / df_2021.iloc[0,0] * 100
+        # Calculate RSI
+        ups = [max(0, closes[i] - closes[i+1]) for i in range(len(closes)-1)] 
+        downs = [max(0, closes[i+1] - closes[i]) for i in range(len(closes)-1)]
+        avg_up = sum(ups)/14
+        avg_down = sum(downs)/14
+        rs = avg_up / avg_down
+        rsi = 100 - (100/(1+rs))
         
-        return [increase_percent]
+        # Get latest close price
+        query = """SELECT close
+                FROM absdb.v3
+                WHERE LOWER(ticker) LIKE LOWER('%TOP%')
+                ORDER BY dtyyyymmdd DESC
+                LIMIT 1"""
+                
+        cursor.execute(query)
+        latest_close = cursor.fetchone()[0]
+        
+        conn.close()
+        
+        return f"SMA: {sma:.2f}, RSI: {rsi:.2f}, Latest close price: {latest_close:.2f}"
     
     except:
-        return ["no query result"]
+        return "no query result"
+    
         
+print(get_result())    
+    
