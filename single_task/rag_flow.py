@@ -3,7 +3,9 @@ from langchain.embeddings.sagemaker_endpoint import EmbeddingsContentHandler
 from langchain.vectorstores import OpenSearchVectorSearch
 import langchain 
 from langchain.load.dump import dumps
-from langchain.chains import RetrievalQA, RetrievalQAWithSourcesChain
+from langchain.chains import RetrievalQA
+# from .retrieval_qa import RetrievalQA
+from langchain import PromptTemplate
 
 from opensearchpy import OpenSearch, RequestsHttpConnection, AWSV4SignerAuth
 import boto3
@@ -50,8 +52,8 @@ class ContentHandler(EmbeddingsContentHandler):
         return response_json["vectors"]
 
 
-additional_promt = """\n<Note> Nếu như bạn không biết câu trả lời, hãy trả lời: "Đang xử lý ...", không bịa ra câu trả lời, chỉ trả lời bằng tiếng Việt Nam.  </Note>\n"""
-
+# additional_promt = """\n<Note> Nếu như bạn không biết câu trả lời, hãy trả lời: "Đang xử lý ...", không bịa ra câu trả lời, chỉ trả lời bằng tiếng Việt Nam.  </Note>\n"""
+additional_promt = """ """
 def ask_streaming_rag(streaming_callback: FunctionType, query: str)-> str:
     '''
     Param: 
@@ -109,10 +111,55 @@ def ask_streaming_rag(streaming_callback: FunctionType, query: str)-> str:
 
     # RetrievalQAWithSourcesChain(llm=llm, )
     # qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever())
-    qa = RetrievalQA.from_chain_type(llm=get_llm_stream(streaming_callback), 
-                                     chain_type="stuff", 
-                                     retriever=docsearch.as_retriever(search_kwargs={'k': 5}),
-                                     return_source_documents=False)
+
+    # qa = RetrievalQA.from_chain_type(llm=get_llm_stream(streaming_callback), 
+    #                                  chain_type="stuff", 
+    #                                  retriever=docsearch.as_retriever(search_kwargs={'k': 5}),
+    #                                  return_source_documents=False)
+
+
+#     template = """
+# You are the Chatbot of An Binh Securities Company (Chứng khoán An Bình). Use the following pieces of context to answer the question at the end without preamble
+
+# {context}
+
+# If you can not answer the question based on above context, don't try to make up an answer, only answer with "Processing..." without preamble
+# Question: {question}
+# Helpful Answer:
+# <note> Response without preamble </note>
+# """
+
+    template = """
+Bạn là trợ lý ảo của công ty chứng khoán An Bình. Nếu ai đó hỏi thăm bạn, hãy trả lời tôi là trợ lý ảo của công ty chứng khoán An Bình. Ngoài ra, sử dụng những nội dung dưới đây để trả lời câu hỏi ở cuối : 
+
+{context}
+
+<note>
+Nếu bạn không thể trả lời câu hỏi dựa trên thông tin ở trên, chỉ cần trả lời "..." và không cần giải thích gì thêm, không thêm bất kì lời nói nào.
+</note>
+
+Câu hỏi: {question}
+<note> Response without preamble </note>
+"""
+
+    prompt = PromptTemplate(
+        input_variables=["context", "question"],
+        template=template,
+    )
+
+    qa = RetrievalQA.from_chain_type(
+        llm=get_llm_stream(streaming_callback), 
+        chain_type='stuff',
+        retriever=docsearch.as_retriever(search_kwargs={'k': 5}),
+        verbose=True,
+        chain_type_kwargs={
+            "verbose": True,
+            "prompt": prompt,
+            
+        }
+    )
+
+    # import IPython ; IPython.embed()
     print("---- RAG Query 1---- in file: ", query)
     # answer = qa.run(query)
 
@@ -120,5 +167,5 @@ def ask_streaming_rag(streaming_callback: FunctionType, query: str)-> str:
     # print("---- RAG Query 1 1---- in file: ", query)
     # print("---- RAG Answer---- in file: ")
     # print(query, "\n-\n", answer)
-    return qa.run(query+additional_promt)
+    return qa.run(query)
 

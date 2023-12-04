@@ -21,7 +21,7 @@ def strim_code(raw_answer: str):
     return strim_ans
 
 
-def ask_python_code(question: str, answer_template: str):
+def ask_python_code(question: str):
     """
     Param: question : str
     Return: Result value
@@ -37,9 +37,10 @@ def ask_python_code(question: str, answer_template: str):
     formula_note = formula.ema + "\n\n" + formula.sma + "\n\n" + formula.rsi_2
     db_info = dbtable_info.dataupcom
 
-    prompt_template_for_python_postgre = f"""You are both SQL expert and Python expert, and you work as both a Data Analysis and a Developer for a Securities Company.
+    prompt_template_for_python_postgre = f"""You are both SQL expert and Python expert, and you work as both a Data Analysis and a Developer for a Securities Company (An Binh Securities Company)
 Given an input question, create a syntactically correct python program, this program must use SQL query to run in Postgresql database using psycopg2 and pandas.read_sql.
 Pay attention to use only the column names you can see in the tables below. Be careful to not query for columns that do not exist. 
+
 If the question does not require to query the PostgreSQL database, do not make up answer, answer with this format: 
 <answer>
 <code>
@@ -51,12 +52,16 @@ def get_result():
 </answer>
 
 Unless the user specifies in the question a specific number of examples to obtain, query for at most 10 results using the LIMIT clause as per SQL. You can order the results to return the most informative data in the database.
-When comparing ticker in SQL, use LIKE, LOWER() for both operands, do not use "=", e.g: To check if ticker equals to "Xyz", then use: LOWER(ticker) LIKE LOWER('%Xyz%').
+
+<note> When comparing ticker in SQL, use LIKE, LOWER() for both operands, do not use "=", e.g: To check if ticker equals to "Xyz", use: LOWER(ticker) LIKE LOWER('%Xyz%'). </note>
 
 Only use the following formulas if the question mentions any of them, do not use your knowledge to create any formula if it is not mentioned below:
+
 {formula_note}
 
+
 Only use the following database with tables:
+
 {db_info}
 
 Return program's result in a function named get_result, the get_result function will return a string that answer the question with corresponding values.
@@ -68,8 +73,11 @@ Do not use print() function, python code format:
 ```
 </code>
 </answer>
-If the Question wants to know any values, carefully check those formulas above, do not use your own formula to answer the Question and answer "not found formula" if you can not find the formula.
-<question>{question}</question>"""
+
+If the Question wants to know any values, carefully check those formulas above, use "not found formula" to answer instead of using your own formula to answer the Question.
+<question>
+{question}
+</question>"""
     ################################
 
     print("prompt_template_for_python_postgre: \n", prompt_template_for_python_postgre)
@@ -98,12 +106,18 @@ If the Question wants to know any values, carefully check those formulas above, 
     # import that file module and get the result
     import importlib
     module_path = f"single_task.auto_gen.{file_name}"
+    print("___ module path: " + module_path)
     auto_generated_python_athena_code = importlib.import_module(module_path)
     try: 
         final_code_result = auto_generated_python_athena_code.get_result()
     except:
         final_code_result = "no query result"
     
-    result = answer_template.replace("answer_template_holder", ' ,'.join(map(str,final_code_result)))
-    streamlit.text(result)
+    if "không thể" not in final_code_result[:10].lower() and "không tìm" not in final_code_result[:10].lower() and "no query result" not in final_code_result and "không có câu hỏi" not in final_code_result[:20].lower() and "không có kết quả" not in final_code_result[:20].lower():
+        streamlit.text(final_code_result)
+        streamlit.text("_end_")
+        
+    else:
+        # streamlit.text("_end_")
+        final_code_result = "_end_"
     return final_code_result

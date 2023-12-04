@@ -150,9 +150,9 @@ def get_answer_type_1(question, start_time):
     '''
     stock_code = get_stock_code(question)
 
-    question_list = [[code_flow.ask_python_code, (f"Chỉ số RSI của mã {stock_code} là gì?", f"Chỉ số RSI của mã {stock_code} là : answer_template_holder")], 
-                     [code_flow.ask_python_code,( f"Chỉ số SMA của mã {stock_code} là gì?", f"Chỉ số SMA của mã {stock_code} cho 14 ngày là : answer_template_holder")],
-                     [code_flow.ask_python_code,( f"Chỉ số EMA của mã {stock_code} cho 14 ngày là gì?", f"Chỉ số EMA của mã {stock_code} cho 14 ngày là : answer_template_holder")]]
+    question_list = [[code_flow.ask_python_code, (f"Chỉ số RSI của mã {stock_code} là gì?", )], 
+                     [code_flow.ask_python_code,( f"Chỉ số SMA của mã {stock_code} là gì?",)],
+                     [code_flow.ask_python_code,( f"Chỉ số EMA của mã {stock_code} cho 14 ngày là gì?", )]]
     rsi, sma, ema = multi_thread.run_multi_funcs(question_list)
 
     ans = f"""Dựa trên dữ liệu gần nhất cho mã chứng khoán {stock_code}:
@@ -180,8 +180,7 @@ def get_answer_type_2(question, start_time):
     st_callback_2 = StreamlitCallbackHandler(st.container())
 
     question_list = [
-        [code_flow.ask_python_code, (f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?",
-                                     f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn answer_template_holder phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ")],
+        [code_flow.ask_python_code, (f"Mã {stock_code} có mức giá đóng cửa trung bình trong năm 2022 cao hơn bao nhiêu phần trăm so với mức giá đóng cửa trung bình trong năm 2021 ?",)],
         [rag_flow.ask_streaming_rag, (st_callback_1 ,f"Trong năm 2022, {bank_name} có các sự kiện quan trọng nào?")],
         [rag_flow.ask_streaming_rag, (st_callback_2 ,f"Trong năm 2022, {bank_name} đạt được những giải thưởng gì ?")]
     ]
@@ -203,12 +202,14 @@ def get_answer_type_2(question, start_time):
 def get_answer_type_0(question, start_time):
     st_callback = StreamlitCallbackHandler(st.container())
     rag_answer, code_answer = multi_thread.run_multi_funcs([ [rag_flow.ask_streaming_rag, (st_callback, question)] , 
-                                                             [code_flow.ask_python_code, ( question, question + " : answer_template_holder" ) ]
+                                                             [code_flow.ask_python_code, ( question,) ]
                                                            ])
-    if len(code_answer) == 0 or code_answer[0] == "no query result" or str(code_answer) == "0" or str(code_answer) == "[0]" :
-        if "Đang xử lý ..." in rag_answer:
-            res = "Hiện tại chưa có thông tin về mã chứng khoán của quý khách. Vui lòng xem thêm tại đường link sau: https://itrade.abs.vn/"
-            st.text(res)
-            return res
-    return "rag_answer:\n" + rag_answer + "\n--------\n" + "code_answer:\n" + ' '.join(str(e) for e in code_answer) 
+    # if len(code_answer) == 0 or code_answer[0] == "no query result" or str(code_answer) == "0" or str(code_answer) == "[0]" :
+    #     if "Đang xử lý ..." in rag_answer:
+    #         res = "Hiện tại chưa có thông tin về mã chứng khoán của quý khách. Vui lòng xem thêm tại đường link sau: https://itrade.abs.vn/"
+    #         st.text(res)
+    #         return res
+    if "_end_" in code_answer and "..." == rag_answer.strip():
+        st.text("Xin lỗi, tôi không trả lời được câu hỏi này.")
+    return "rag_answer:\n" + "$" + rag_answer + "$" + "\n--------\n" + "code_answer:\n" + code_answer
 

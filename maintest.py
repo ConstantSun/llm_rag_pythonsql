@@ -5,7 +5,7 @@
 # from datetime import datetime
 # import question_type
 # from single_task import code_flow
-import bedrock
+# import bedrock
 
 # t1 = datetime.now()
 # asyncio.run(asynctest.main())
@@ -89,5 +89,8 @@ question_list = [
 #     print(q[1])
 #     print("--------------------------------")
 
-res = multi_thread.run_multi_funcs(question_list)
+# res = multi_thread.run_multi_funcs(question_list)
 # print(res)
+
+from single_task import draft
+print(draft.test())
