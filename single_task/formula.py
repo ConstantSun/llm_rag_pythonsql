@@ -16,10 +16,11 @@ sma = """This is SMA (Simple Moving Average) formula:
 - SMA equals to Mean of above array values."""
 
 rsi_2 = """When the question mentions RSI, it means Relative Strength Index in Securities. RSI is a value in a range from 0 to 100. This is the formula:
-- Retrieve 15 values of the most recent closing price, assuming day 15 is the most recent day, and day 1 is the farthest day.
-- Calculate the variation between closing prices of two consecutive days, specifically calculate 14 values as follows: closing price on day n+1 minus closing price on day n, closing price on day n minus closing price on day n-1, .... until the closing price of day 2 minus the closing price of day 1.
-- Calculate the value X, X equals to (sum of positive variation)/14.
-- Calculate the value Y, Y equals to abs of (sum of negative variation)/14.
+- Retrieve 15 values of the most recent closing price by SQL query
+- Reverse above array values
+- Calculate 14 variation between closing prices of two consecutive elements in above array: array[i] - array[i+1]
+- Calculate the value X equals to (sum of positive variation).
+- Calculate the value Y equals to abs of (sum of negative variation).
 - Calculate value: RSI = 100 - (100 / (1 + X / Y) )"""
 
 # rsi = """When the question mentions RSI, it means Relative Strength Index in Securities. RSI is a value in a range from 0 to 100. This is the formula:

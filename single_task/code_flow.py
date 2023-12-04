@@ -136,12 +136,4 @@ If the Question wants to know any values, carefully check those formulas above, 
         streamlit.text(final_code_result)
         streamlit.text("_end_")        
 
-
-    # if  not in black_list and "no query result" not in final_code_result and "không có câu hỏi" not in final_code_result[:20].lower() and "không có kết quả" not in final_code_result[:20].lower() and "không có thông tin" not in final_code_result[:20].lower():
-    #     streamlit.text(final_code_result)
-    #     streamlit.text("_end_")
-        
-    # else:
-    #     # streamlit.text("_end_")
-    #     final_code_result = "_end_"
     return final_code_result
