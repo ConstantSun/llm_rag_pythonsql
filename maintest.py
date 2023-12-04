@@ -93,4 +93,4 @@ question_list = [
 # print(res)
 
 from single_task import draft
-print(draft.test())
+print(draft.my_func())

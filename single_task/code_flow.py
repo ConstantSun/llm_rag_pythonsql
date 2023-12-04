@@ -5,6 +5,9 @@ import random
 from datetime import datetime
 import single_task.convert_db as convert_db
 import streamlit
+import os
+import importlib
+
 
 def strim_code(raw_answer: str):
     strim_ans = ""
@@ -96,23 +99,26 @@ If the Question wants to know any values, carefully check those formulas above, 
 
     print(f"_____@TIME EXECUTED_____Athena SQL_______: {datetime.now()- start_time}\n\n{generated_python_athena_code}\n")
     print("----end-----------------\n", )
-    ################################
-    # write that code above to a .py file
-    file_name = "auto_generated_python_athena_code" + str(random.randint(0, 1000))
-    text_file = open(f"single_task/auto_gen/{file_name}.py", "w")
-    text_file.write(generated_python_athena_code)
-    text_file.close()
 
-    # import that file module and get the result
-    import importlib
-    module_path = f"single_task.auto_gen.{file_name}"
-    print("___ module path: " + module_path)
-    auto_generated_python_athena_code = importlib.import_module(module_path)
-    try: 
-        final_code_result = auto_generated_python_athena_code.get_result()
+
+    file_name = "auto_gen_code"
+    path = f'single_task/auto_gen/{file_name}.py'
+    # Generate a separate Python file 
+    with open(path, 'w') as f:
+        f.write(generated_python_athena_code)
+
+    # Import the function from the generated file
+    spec = importlib.util.spec_from_file_location(file_name, os.path.join(os.getcwd(), path))
+
+    generated_module = importlib.util.module_from_spec(spec)
+
+    spec.loader.exec_module(generated_module)
+    try:
+        final_code_result = generated_module.get_result()
     except:
         final_code_result = "no query result"
-    
+
+
     if "không thể" not in final_code_result[:10].lower() and "không tìm" not in final_code_result[:10].lower() and "no query result" not in final_code_result and "không có câu hỏi" not in final_code_result[:20].lower() and "không có kết quả" not in final_code_result[:20].lower():
         streamlit.text(final_code_result)
         streamlit.text("_end_")

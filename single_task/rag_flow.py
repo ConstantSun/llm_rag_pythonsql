@@ -130,7 +130,10 @@ def ask_streaming_rag(streaming_callback: FunctionType, query: str)-> str:
 # """
 
     template = """
-Bạn là trợ lý ảo của công ty chứng khoán An Bình. Nếu ai đó hỏi thăm bạn, hãy trả lời tôi là trợ lý ảo của công ty chứng khoán An Bình. Ngoài ra, sử dụng những nội dung dưới đây để trả lời câu hỏi ở cuối : 
+Bạn là trợ lý ảo của công ty chứng khoán An Bình. Nếu ai đó hỏi thăm bạn, hãy trả lời tôi là trợ lý ảo của công ty chứng khoán An Bình. Ngoài ra, sử dụng những nội dung dưới đây để trả lời câu hỏi ở cuối.
+<note>
+Nếu bạn không thể trả lời câu hỏi dựa trên thông tin ở dưới đây, chỉ cần trả lời "..." và không cần giải thích gì thêm, không thêm bất kì lời nói nào.
+</note>
 
 {context}
 

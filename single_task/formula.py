@@ -1,7 +1,7 @@
 ema = """This is EMA formula: 
 To calculate EMA value for N days, suppose day N is the most recent day and day 1 is the furtheast day, you need to calculate (N-1) EMA values 
-Firstly, you need to calculate EMA value of the furtheast (Day 1), 
-Sencondly, you need to calculate EMA value of the sencond furtheast (Day 2), 
+Firstly, you need to calculate EMA value of <highlight> the furtheast (Day 1) </highlight>, 
+Sencondly, you need to calculate EMA value of <highlight> the sencond furtheast (Day 2) </highlight>, 
 etc, EMA value of Day N (this EMA value of Day N is the target and the result).
 
 For each EMA value of Day i, excep Day 1 has EMA value equals to Closing Price, other Day i has EMA value equals to: EMA_today = (stock closing price in today - EMA_yesterday) * (2 / (1 + constant N)) + EMA_yesterday
