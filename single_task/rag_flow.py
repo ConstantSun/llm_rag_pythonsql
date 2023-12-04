@@ -109,41 +109,33 @@ def ask_streaming_rag(streaming_callback: FunctionType, query: str)-> str:
     # results = docsearch.similarity_search(query, k=3)  # our search query  # return 3 most relevant docs
     # print(dumps(results, pretty=True))
 
-    # RetrievalQAWithSourcesChain(llm=llm, )
-    # qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever())
-
-    # qa = RetrievalQA.from_chain_type(llm=get_llm_stream(streaming_callback), 
-    #                                  chain_type="stuff", 
-    #                                  retriever=docsearch.as_retriever(search_kwargs={'k': 5}),
-    #                                  return_source_documents=False)
-
-
-#     template = """
-# You are the Chatbot of An Binh Securities Company (Chứng khoán An Bình). Use the following pieces of context to answer the question at the end without preamble
-
-# {context}
-
-# If you can not answer the question based on above context, don't try to make up an answer, only answer with "Processing..." without preamble
-# Question: {question}
-# Helpful Answer:
-# <note> Response without preamble </note>
-# """
 
     template = """
-Bạn là trợ lý ảo của công ty chứng khoán An Bình. Nếu ai đó hỏi thăm bạn, hãy trả lời tôi là trợ lý ảo của công ty chứng khoán An Bình. Ngoài ra, sử dụng những nội dung dưới đây để trả lời câu hỏi ở cuối.
-<note>
-Nếu bạn không thể trả lời câu hỏi dựa trên thông tin ở dưới đây, chỉ cần trả lời "..." và không cần giải thích gì thêm, không thêm bất kì lời nói nào.
-</note>
+Sử dụng những nội dung dưới đây để trả lời câu hỏi ở cuối.
 
 {context}
 
 <note>
-Nếu bạn không thể trả lời câu hỏi dựa trên thông tin ở trên, chỉ cần trả lời "..." và không cần giải thích gì thêm, không thêm bất kì lời nói nào.
+Bạn là trợ lý ảo của công ty chứng khoán An Bình. Nếu bạn không thể trả lời câu hỏi dựa trên thông tin ở trên, chỉ cần trả lời "..." và không cần giải thích gì thêm, không thêm bất kì lời nói nào.
 </note>
 
-Câu hỏi: {question}
+Câu hỏi: {question} 
 <note> Response without preamble </note>
 """
+
+#     template = """
+# Bạn là trợ lý ảo của công ty chứng khoán An Bình. Nếu ai đó hỏi bạn là ai hay chỉ nói câu "xin chào", hãy trả lời "Tôi là trợ lý ảo của công ty chứng khoán An Bình". Ngoài ra, sử dụng những nội dung dưới đây để trả lời câu hỏi ở cuối.
+# Lưu ý, nếu bạn không thể trả lời câu hỏi dựa trên thông tin ở dưới đây, chỉ cần trả lời "..." và không cần giải thích gì thêm, không thêm bất kì lời nói nào.
+
+# {context}
+
+# <note>
+# Nếu bạn không thể trả lời câu hỏi dựa trên thông tin ở trên, chỉ cần trả lời "..." và không cần giải thích gì thêm, không thêm bất kì lời nói nào.
+# </note>
+
+# Câu hỏi: {question}
+# <note> Response without preamble </note>
+# """
 
     prompt = PromptTemplate(
         input_variables=["context", "question"],
@@ -153,7 +145,7 @@ Câu hỏi: {question}
     qa = RetrievalQA.from_chain_type(
         llm=get_llm_stream(streaming_callback), 
         chain_type='stuff',
-        retriever=docsearch.as_retriever(search_kwargs={'k': 5}),
+        retriever=docsearch.as_retriever(search_kwargs={'k': 3}),
         verbose=True,
         chain_type_kwargs={
             "verbose": True,

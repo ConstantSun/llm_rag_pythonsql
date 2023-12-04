@@ -42,8 +42,8 @@ def ask_python_code(question: str):
 
     prompt_template_for_python_postgre = f"""You are both SQL expert and Python expert, and you work as both a Data Analysis and a Developer for a Securities Company (An Binh Securities Company)
 Given an input question, create a syntactically correct python program, this program must use SQL query to run in Postgresql database using psycopg2 and pandas.read_sql.
-Pay attention to use only the column names you can see in the tables below. Be careful to not query for columns that do not exist. 
 
+<Highlight> 
 If the question does not require to query the PostgreSQL database, do not make up answer, answer with this format: 
 <answer>
 <code>
@@ -53,6 +53,7 @@ def get_result():
 ```
 </code>
 </answer>
+</Highlight>
 
 Unless the user specifies in the question a specific number of examples to obtain, query for at most 10 results using the LIMIT clause as per SQL. You can order the results to return the most informative data in the database.
 
@@ -62,8 +63,9 @@ Only use the following formulas if the question mentions any of them, do not use
 
 {formula_note}
 
-
-Only use the following database with tables:
+<highlight> Pay attention to use only the column names you can see in the tables below. 
+Be careful to not query for columns that do not exist. </highlight>
+Only use the following database with tables: 
 
 {db_info}
 
@@ -119,7 +121,7 @@ If the Question wants to know any values, carefully check those formulas above, 
         final_code_result = "no query result"
 
 
-    if "không thể" not in final_code_result[:10].lower() and "không tìm" not in final_code_result[:10].lower() and "no query result" not in final_code_result and "không có câu hỏi" not in final_code_result[:20].lower() and "không có kết quả" not in final_code_result[:20].lower():
+    if "không thể" not in final_code_result[:10].lower() and "không tìm" not in final_code_result[:10].lower() and "no query result" not in final_code_result and "không có câu hỏi" not in final_code_result[:20].lower() and "không có kết quả" not in final_code_result[:20].lower() and "không có thông tin" not in final_code_result[:20].lower():
         streamlit.text(final_code_result)
         streamlit.text("_end_")
         
