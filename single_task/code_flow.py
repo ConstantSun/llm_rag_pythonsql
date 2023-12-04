@@ -120,12 +120,28 @@ If the Question wants to know any values, carefully check those formulas above, 
     except:
         final_code_result = "no query result"
 
+    flag = False
+    black_list_1 = ["xin chào", "không tìm", "không thể"]
+    for word in black_list_1:
+        if word in final_code_result[:10].lower():
+            flag = True
+    black_list_2 = [ "no query result" ,  "không có câu hỏi",  "không có kết quả",  "không có thông tin"]
+    for word in black_list_2:
+        if word in final_code_result[:20].lower():
+            flag = True
 
-    if "không thể" not in final_code_result[:10].lower() and "không tìm" not in final_code_result[:10].lower() and "no query result" not in final_code_result and "không có câu hỏi" not in final_code_result[:20].lower() and "không có kết quả" not in final_code_result[:20].lower() and "không có thông tin" not in final_code_result[:20].lower():
-        streamlit.text(final_code_result)
-        streamlit.text("_end_")
-        
-    else:
-        # streamlit.text("_end_")
+    if flag:
         final_code_result = "_end_"
+    else:
+        streamlit.text(final_code_result)
+        streamlit.text("_end_")        
+
+
+    # if  not in black_list and "no query result" not in final_code_result and "không có câu hỏi" not in final_code_result[:20].lower() and "không có kết quả" not in final_code_result[:20].lower() and "không có thông tin" not in final_code_result[:20].lower():
+    #     streamlit.text(final_code_result)
+    #     streamlit.text("_end_")
+        
+    # else:
+    #     # streamlit.text("_end_")
+    #     final_code_result = "_end_"
     return final_code_result
