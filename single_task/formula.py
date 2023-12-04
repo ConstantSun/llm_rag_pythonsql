@@ -18,7 +18,7 @@ sma = """This is SMA (Simple Moving Average) formula:
 rsi_2 = """When the question mentions RSI, it means Relative Strength Index in Securities. RSI is a value in a range from 0 to 100. This is the formula:
 - Retrieve 15 values of the most recent closing price by SQL query
 - Reverse above array values
-- Calculate 14 variation between closing prices of two consecutive elements in above array: array[i] - array[i+1]
+- Calculate 14 variation between closing prices of two consecutive elements in above array: array[i] - array[i-1]
 - Calculate the value X equals to (sum of positive variation).
 - Calculate the value Y equals to abs of (sum of negative variation).
 - Calculate value: RSI = 100 - (100 / (1 + X / Y) )"""

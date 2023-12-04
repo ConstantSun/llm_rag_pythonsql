@@ -15,8 +15,8 @@ def get_result():
     ups = 0
     downs = 0
     
-    for i in range(len(closes)-1):
-      change = closes[i] - closes[i+1]
+    for i in range(1, len(closes)):
+      change = closes[i] - closes[i-1]
       if change > 0:
         ups += change
       else:
