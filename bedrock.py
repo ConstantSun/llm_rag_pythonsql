@@ -85,7 +85,7 @@ from langchain.load.dump import dumps
 
 
 
-os.environ["AWS_DEFAULT_REGION"] = "us-east-1" # TODO: change to your region
+os.environ["AWS_DEFAULT_REGION"] = env.region_name # TODO: change to your region
 
 boto3_bedrock = get_bedrock_client(
     #assumed_role=os.environ.get("BEDROCK_ASSUME_ROLE", None),

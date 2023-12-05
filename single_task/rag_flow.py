@@ -13,7 +13,7 @@ from botocore.credentials import Credentials
 
 import json
 from typing import Dict, List
-
+import env
 from bedrock import get_llm_stream
 from types import FunctionType
 
@@ -68,8 +68,8 @@ def ask_streaming_rag(streaming_callback: FunctionType, query: str)-> str:
     content_handler = ContentHandler()
     infloatbase_batch_embeddings = SagemakerEndpointEmbeddings(
         # credentials_profile_name="credentials-profile-name",
-        endpoint_name="huggingface-pytorch-inference-2023-11-17-04-03-54-290", # TODO: change this to your own sbert endpoint
-        region_name="us-east-1",  #  TODO: change this to your sagemaker deployed sbert endpoint Region 
+        endpoint_name=env.embedding_enpoint, # TODO: change this to your own sbert endpoint
+        region_name=env.region_name,  #  TODO: change this to your sagemaker deployed sbert endpoint Region 
         content_handler=content_handler,
     )
     
@@ -84,7 +84,7 @@ def ask_streaming_rag(streaming_callback: FunctionType, query: str)-> str:
     # Call the assume_role method of the STSConnection object and pass the role
     # ARN and a role session name.
     assumed_role_object=sts_client.assume_role(
-        RoleArn="arn:aws:iam::628152409662:role/ec2-oregon-role",  # TODO: change to your own role.
+        RoleArn=env.rolearn,  # TODO: change to your own role.
         RoleSessionName="AssumeRoleSession1"
     )
     credentials=assumed_role_object['Credentials']
@@ -92,10 +92,10 @@ def ask_streaming_rag(streaming_callback: FunctionType, query: str)-> str:
 
 
 
-    auth = AWSV4SignerAuth(creds, "us-east-1", service)   # TODO: change your region
+    auth = AWSV4SignerAuth(creds, env.region_name, service)   # TODO: change your region
     index_name = "infloatbase"    # TODO: change your index_name
     docsearch = OpenSearchVectorSearch(
-        "https://f4rkudrfg2b0fp2a8qhi.us-east-1.aoss.amazonaws.com:443",  # TODO: Change your AOS endpoint here
+        env.aos_endpoint,  # TODO: Change your AOS endpoint here
         index_name,
         infloatbase_batch_embeddings,
         http_auth=auth,
