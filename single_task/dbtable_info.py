@@ -1,5 +1,6 @@
-dataupcom_db_name = "absdb" # TODO: change this to your own database name, note : DO NOT USE characters other than a-z, A-Z, 0-9.
-table_name = "v3"  # TODO: change this to your own table name, note : DO NOT USE characters other than a-z, A-Z, 0-9.
+import env
+dataupcom_db_name = env.dataupcom_db_name # TODO: change this to your own database name, note : DO NOT USE characters other than a-z, A-Z, 0-9.
+table_name = env.table_name  # TODO: change this to your own table name, note : DO NOT USE characters other than a-z, A-Z, 0-9.
 dataupcom = f"""Database name: {dataupcom_db_name}
 Table name: {table_name}
 <table>
