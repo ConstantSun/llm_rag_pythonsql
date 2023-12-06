@@ -2,7 +2,6 @@ import single_task.code_flow as code_flow
 import single_task.rag_flow as rag_flow
 import question_type
 from datetime import datetime
-from types import FunctionType  
 
 def main(user_question: str):
 
@@ -44,9 +43,3 @@ def main(user_question: str):
     print(">>>>>>>>>>>>>>>>>>>>>>\nFINAL ANSWER: ", answer)
     print("_____@TIME EXECUTED_____final: ", datetime.now() - start_time)
     return answer
-
-# main()
-
-# res = code_flow.test_ask_python_code("RSI của mã Chứng khoán DVN trong 14 ngày gần nhất")
-# print("____res:____")
-# print(res)

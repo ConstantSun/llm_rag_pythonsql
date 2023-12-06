@@ -4,7 +4,6 @@ from langchain.vectorstores import OpenSearchVectorSearch
 import langchain 
 from langchain.load.dump import dumps
 from langchain.chains import RetrievalQA
-# from .retrieval_qa import RetrievalQA
 from langchain import PromptTemplate
 
 from opensearchpy import OpenSearch, RequestsHttpConnection, AWSV4SignerAuth
@@ -52,8 +51,6 @@ class ContentHandler(EmbeddingsContentHandler):
         return response_json["vectors"]
 
 
-# additional_promt = """\n<Note> Nếu như bạn không biết câu trả lời, hãy trả lời: "Đang xử lý ...", không bịa ra câu trả lời, chỉ trả lời bằng tiếng Việt Nam.  </Note>\n"""
-additional_promt = """ """
 def ask_streaming_rag(streaming_callback: FunctionType, query: str)-> str:
     '''
     Param: 
@@ -106,9 +103,6 @@ def ask_streaming_rag(streaming_callback: FunctionType, query: str)-> str:
         engine="faiss"
     )       
        
-    # results = docsearch.similarity_search(query, k=3)  # our search query  # return 3 most relevant docs
-    # print(dumps(results, pretty=True))
-
 
     template = """
 Sử dụng những nội dung dưới đây để trả lời câu hỏi ở cuối.
@@ -123,19 +117,6 @@ Câu hỏi: {question}
 <note> Response without preamble </note>
 """
 
-#     template = """
-# Bạn là trợ lý ảo của công ty chứng khoán An Bình. Nếu ai đó hỏi bạn là ai hay chỉ nói câu "xin chào", hãy trả lời "Tôi là trợ lý ảo của công ty chứng khoán An Bình". Ngoài ra, sử dụng những nội dung dưới đây để trả lời câu hỏi ở cuối.
-# Lưu ý, nếu bạn không thể trả lời câu hỏi dựa trên thông tin ở dưới đây, chỉ cần trả lời "..." và không cần giải thích gì thêm, không thêm bất kì lời nói nào.
-
-# {context}
-
-# <note>
-# Nếu bạn không thể trả lời câu hỏi dựa trên thông tin ở trên, chỉ cần trả lời "..." và không cần giải thích gì thêm, không thêm bất kì lời nói nào.
-# </note>
-
-# Câu hỏi: {question}
-# <note> Response without preamble </note>
-# """
 
     prompt = PromptTemplate(
         input_variables=["context", "question"],

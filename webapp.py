@@ -1,9 +1,3 @@
-"""
-A simple web application to implement a chatbot. This app uses Streamlit 
-for the UI and the Python requests package to talk to an API endpoint that
-implements text generation and Retrieval Augmented Generation (RAG) using LLMs
-and Amazon OpenSearch as the vector database.
-"""
 import streamlit as st
 import qna  
 

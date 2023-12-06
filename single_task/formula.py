@@ -22,8 +22,3 @@ rsi_2 = """When the question mentions RSI, it means Relative Strength Index in S
 - Calculate the value X equals to (sum of positive variation).
 - Calculate the value Y equals to abs of (sum of negative variation).
 - Calculate value: RSI = 100 - (100 / (1 + X / Y) )"""
-
-# rsi = """When the question mentions RSI, it means Relative Strength Index in Securities. RSI is a value in a range from 0 to 100. This is the formula:
-# Firstly, calculate the variation between the closing prices of two consecutive days.
-# Secondly, take the average of the amount of increase and decrease in 14 days. 
-# Finally, RSI = 100 - (100 / (1 + (Average amount of increase / Average amount of decrease)))"""
