@@ -1,0 +1,18 @@
+﻿STT,Type,Câu hỏi ,Mong muốn
+1,1,Chứng khoán <mã cổ phiếu> có nên đầu tư không?,"Nhánh 1 (Chỉ số tài chính): Xem P/E ratio của ABW.
+Nhánh 2 (So sánh với chỉ số ngành): Xem P/E của ABW đang cao hơn hay thấp hơn P/E của ngành. Kết luận: Nếu P/E của ABW cao hơn trung bình ngành tối thiểu 20% thì không nên mua, nếu nằm trong khoảng -20% đến 20% thì nên xem xét, nếu thấp hơn -20% thì nên mua vì giá rẻ. 
+Nhánh 3 (Tin tức): Có tin tức nào về ABW đang ảnh hưởng đến quyết định đầu tư không?"
+2,2,Giá cổ phiếu <mã cổ phiếu> thế nào trong ngày hôm nay?,"Nhánh 1 (Tăng giảm giá): ""Tính chênh lệch giá đóng cửa của ACE ngày hôm nay so với giá đóng cửa ngày hôm trước""
+Nhánh 2 (Lý do): ""Có tin tức hay sự kiện nào đặc biệt gây tăng giá không?""
+Nhánh 3 (So sánh thị trường): ""So sánh tăng giảm giá của ACE với thị trường chung."""
+3,3,Mã <mã cổ phiếu> đang ở độ quá mua không?,"Nhánh 1 (Chỉ số kỹ thuật): ""Kiểm tra chỉ số RSI của mã CMT""
+Nhánh 2 (Xác định trạng thái): RSI >70 ==> kết luận: CMT đang ở giai đoạn quá mua, RSI <30 ==> kết luận: CMT đang ở giai đoạn quá bán; Nằm giữa khoảng ==> kết luận: CMT đang không ở giai đoạn quá độ. "
+4,4,Thị trường chứng khoán dạo này thế nào? ,"Nhánh 1 (Chỉ số thị trường): ""Kiểm tra chỉ số chung của thị trường như VN-Index, VN30-INDEX""
+Nhánh 2 (So sánh): ""So sánh với chỉ số của trước đó 20 phiên"" (xấp xỉ 1 tháng)
+Nhánh 2 (Tin tức thị trường): ""Xem tin tức thị trường chung gần đây có ảnh hưởng gì không?"""
+5,5,Cổ phiếu <mã cổ phiếu> có ổn định không?,"Nhánh 1 (Danh sách cổ phiếu ổn định): ""Xem danh sách cổ phiếu ổn định và kiểm tra xem DSG có trong đó không.""
+Nhánh 2 (So sánh ngành nghề): ""So sánh hiệu suất của MNO với hiệu suất chung của nhóm cổ phiếu ổn định (về giá)"
+6,6,Tôi muốn biết thông tin về mã chứng khoán <mã cổ phiếu> vào năm 2022.,"Nhánh 1: Mức giá đóng cửa trung bình của mã chứng khoán MML của CTCP Masan MEATLife trong năm 2022 là [giá trị]. 
+Nhánh 2: Điều này cao hơn [phần trăm] so với năm trước đó."
+7,7,Phân tích kỹ thuật mã <mã cổ phiếu>?,"Nhánh 1: Điểm hỗ trợ và điểm kháng cự của cổ phiếu MML  (lấy 3 điểm hỗ trợ và 3 điểm kháng cự gần nhất)
+Nhánh 2: Dữ liệu kỹ thuật nên theo dõi để đưa ra quyết định đầu tư (text)"
